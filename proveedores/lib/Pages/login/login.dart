@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:proveedores/Pages/login/logincliente.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text(''),
+          title: const Text('Interfaz Flutter'),
         ),
         body: Center(
           child: Column(
@@ -21,24 +20,25 @@ class MyApp extends StatelessWidget {
             children: [
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    BuildContext = LoginScreen()
-                  );
+                  
                 },
-                child: const Column(
+                child:const  Column(
                   children: [
-                    Text("Ingresar Empleado"),
+                    Text("Ingresar"),
+                    Text("Empleado"),
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 20), // Espacio entre los botones
               ElevatedButton(
                 onPressed: () {
-                  // Navigator.push()
+                  // Acción al presionar el botón de "Ingresar Cliente"
+                  print("Ingresar Cliente");
                 },
                 child: const Column(
                   children: [
-                    Text("Ingresar Cliente"),
+                    Text("Ingresar"),
+                    Text("Cliente"),
                   ],
                 ),
               ),
