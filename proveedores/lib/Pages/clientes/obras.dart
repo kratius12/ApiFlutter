@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import "package:proveedores/Apis/clientes/obra.dart";
+
 class ObrasListScreen extends StatefulWidget {
   final ObrasService obrasService;
 
@@ -23,7 +24,7 @@ class _ObrasListScreenState extends State<ObrasListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Obras'),
+        title: const Text('Lista de Obras clientes'),
       ),
       body: FutureBuilder<List<Obra>>(
         future: _obras,

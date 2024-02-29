@@ -3,22 +3,24 @@ import 'package:proveedores/Apis/clientes/login.dart';
 import 'package:proveedores/Apis/clientes/obra.dart';
 import 'package:proveedores/Pages/clientes/obras.dart';
 
-class LoginScreen extends StatefulWidget {
+class ClienteLoginPage extends StatefulWidget {
+  const ClienteLoginPage({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
 }
-class _LoginScreenState extends State<LoginScreen> {
+
+class _LoginScreenState extends State<ClienteLoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final AuthService authService = AuthService('http://localhost:4000/login');
+  final AuthService authService = AuthService('http://localhost:4000/loginCli');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: const Text('Login cliente'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -44,8 +46,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 );
 
                 if (token != null) {
-                  _mostrarAlerta('Login exitoso', 'Se ha logeado correctamente');
-                  _irAListaObras(); 
+                  _mostrarAlerta(
+                      'Login exitoso', 'Se ha logeado correctamente');
+                  _irAListaObras();
                 } else {
                   _mostrarAlerta('Error', 'Login fallido.');
                 }
