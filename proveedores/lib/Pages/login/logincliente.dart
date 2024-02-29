@@ -8,6 +8,7 @@ class ClienteLoginPage extends StatefulWidget {
   const ClienteLoginPage({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
 }
 
@@ -78,11 +79,20 @@ class _LoginScreenState extends State<ClienteLoginPage> {
               },
               child: const Card(
                 child: ListTile(
-                  title: Text('Haz clic aquí'),
-                  subtitle: Text('Texto descriptivo'),
+                  title: Text(
+                    'Regístrate aquí!!',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
+                  ),
                 ),
               ),
             ),
+            const SizedBox(height: 20,),
+            GestureDetector(
+              
+            )
           ],
         ),
       ),
@@ -123,7 +133,14 @@ class _LoginScreenState extends State<ClienteLoginPage> {
   void _irAFormularioPersonalizado() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context)=> const RegistrationPage())
+      MaterialPageRoute(builder: (context) => const RegistrationPage()),
     );
   }
+}
+
+
+void _irACambiarContrasena(){
+  Navigator.push(
+    
+  )
 }
