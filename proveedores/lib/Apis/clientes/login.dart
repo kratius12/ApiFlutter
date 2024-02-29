@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decode/jwt_decode.dart';
 
-
 class AuthService {
   final String baseUrl;
 
@@ -24,10 +23,10 @@ class AuthService {
     }
   }
 
-   int? getUserIdFromToken(String token) {
+  int? getUserIdFromToken(String token) {
     try {
       Map<String, dynamic> decodedToken = Jwt.parseJwt(token);
-      // Reemplaza 'user_id' con la clave real que contiene el ID del usuario en tu token
+
       return decodedToken['idCli'];
     } catch (e) {
       debugPrint('Error al decodificar el token: $e');

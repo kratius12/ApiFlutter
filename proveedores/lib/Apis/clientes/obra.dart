@@ -5,7 +5,7 @@ class ObrasService {
   ObrasService();
 
   Future<List<Obra>> getObras() async {
-    final response = await http.get(Uri.parse('http://localhost:4000/obras')); // Reemplaza con la ruta correcta
+    final response = await http.get(Uri.parse('http://localhost:4000/obras')); 
 
     if (response.statusCode == 200) {
       List<dynamic> data = jsonDecode(response.body);

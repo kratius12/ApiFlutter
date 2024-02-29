@@ -21,13 +21,15 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Selecciona un tipo de ingreso'),
-      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              'assets/Logo.PNG',
+              height: 200,
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -35,7 +37,13 @@ class HomePage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const ClienteLoginPage()),
                 );
               },
-              child: const Text('Ingresar como Cliente'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue, // Fondo azul para el botón de Cliente
+              ),
+              child: const Text(
+                'Ingresar como cliente',
+                style: TextStyle(color: Colors.white), // Texto negro
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -45,7 +53,13 @@ class HomePage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const EmpleadoLoginPage()),
                 );
               },
-              child: const Text('Ingresar como Empleado'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.grey, // Fondo gris para el botón de Empleado
+              ),
+              child: const Text(
+                'Ingresar como Empleado',
+                style: TextStyle(color: Colors.white), // Texto negro
+              ),
             ),
           ],
         ),
