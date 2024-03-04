@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:proveedores/Apis/clientes/login.dart';
 import 'package:proveedores/Apis/clientes/obra.dart';
-import 'package:proveedores/Pages/clientes/obras.dart';
-import 'package:proveedores/Pages/login/registrarse.dart';
+import 'package:proveedores/Pages/empleados/listar.dart';
+import "package:proveedores/Apis/empleados/login.dart";
+import "package:proveedores/Pages/login/empleados/codigo.dart";
 
-class ClienteLoginPage extends StatefulWidget {
-  const ClienteLoginPage({super.key});
+class EmpleadoLoginPage extends StatefulWidget {
+  const EmpleadoLoginPage({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<ClienteLoginPage> {
+class _LoginScreenState extends State<EmpleadoLoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final AuthService authService = AuthService('http://localhost:4000/loginCli');
+  final AuthService authService = AuthService('http://localhost:4000/login');
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login cliente'),
+        title: const Text('Login empleado'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -32,9 +32,7 @@ class _LoginScreenState extends State<ClienteLoginPage> {
               'assets/Logo.PNG',
               height: 200,
             ),
-            const SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20),
             TextField(
               controller: usernameController,
               decoration: const InputDecoration(labelText: 'Email'),
@@ -72,27 +70,26 @@ class _LoginScreenState extends State<ClienteLoginPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
-            GestureDetector(
-              onTap: () {
-                _irAFormularioPersonalizado();
-              },
-              child: const Card(
-                child: ListTile(
-                  title: Text(
-                    'Regístrate aquí!!',
-                    style: TextStyle(
-                      color: Colors.blue,
-                      decoration: TextDecoration.underline,
+            Card(
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      _irACambiarContra();
+                    },
+                    child: const ListTile(
+                      title: Text(
+                        'Cambiar contraseña',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                ],
               ),
             ),
-            const SizedBox(height: 20,),
-            GestureDetector(
-              
-            )
           ],
         ),
       ),
@@ -109,7 +106,7 @@ class _LoginScreenState extends State<ClienteLoginPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Cerrar la alerta
+                Navigator.of(context).pop(); 
               },
               child: const Text('Aceptar'),
             ),
@@ -123,24 +120,18 @@ class _LoginScreenState extends State<ClienteLoginPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => ObrasListScreen(
+        builder: (context) => ObrasListScreenEmp(
           obrasService: ObrasService(),
         ),
       ),
     );
   }
 
-  void _irAFormularioPersonalizado() {
+  void _irACambiarContra() {
     Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const RegistrationPage()),
-    );
+        context,
+        MaterialPageRoute(
+          builder: (context) => const EnviarCodigoPageEmp(),
+        ));
   }
-}
-
-
-void _irACambiarContrasena(){
-  Navigator.push(
-    
-  )
 }

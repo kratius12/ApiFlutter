@@ -23,6 +23,42 @@ class AuthService {
       return null;
     }
   }
+   Future<String?> enviarCodigo(String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/sendCode'),
+        body: jsonEncode({'email': email}),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        // Map<String, dynamic> data = jsonDecode(response.body);
+        return 'codigo enviado correctamente';
+      } else {
+        return null;
+      }
+    } catch (e) {
+      debugPrint('Error al realizar la solicitud: $e');
+      return null;
+    }
+  }
+  
+  Future<String?> checkcode(String code) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/checkCode'),
+        body: jsonEncode({'code': code}),
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        return 'El codigo ha es correcto!';
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
 
    int? getUserIdFromToken(String token) {
     try {

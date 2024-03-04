@@ -1,26 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:proveedores/Apis/empleados/login.dart';
+import 'package:proveedores/Apis/clientes/login.dart';
 import 'package:proveedores/Apis/clientes/obra.dart';
-import 'package:proveedores/Pages/empleados/listarobras.dart';
+import 'package:proveedores/Pages/clientes/obras.dart';
+import 'package:proveedores/Pages/login/clientes/registrarse.dart';
+import 'package:proveedores/Pages/login/clientes/codigo.dart';
 
-class EmpleadoLoginPage extends StatefulWidget {
-  const EmpleadoLoginPage({super.key});
+class ClienteLoginPage extends StatefulWidget {
+  // ignore: use_key_in_widget_constructors
+  const ClienteLoginPage({Key? key});
 
   @override
   // ignore: library_private_types_in_public_api
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<EmpleadoLoginPage> {
+class _LoginScreenState extends State<ClienteLoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final AuthService authService = AuthService('http://localhost:4000/login');
+  final AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login empleado'),
+        title: const Text('Login cliente'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -31,7 +34,9 @@ class _LoginScreenState extends State<EmpleadoLoginPage> {
               'assets/Logo.PNG',
               height: 200,
             ),
-            const SizedBox(height: 20),
+            const SizedBox(
+              height: 20,
+            ),
             TextField(
               controller: usernameController,
               decoration: const InputDecoration(labelText: 'Email'),
@@ -55,6 +60,7 @@ class _LoginScreenState extends State<EmpleadoLoginPage> {
                   if (token != null) {
                     _mostrarAlerta(
                         'Login exitoso', 'Se ha logeado correctamente');
+
                     _irAListaObras();
                   } else {
                     _mostrarAlerta('Error', 'Login fallido.');
@@ -69,10 +75,68 @@ class _LoginScreenState extends State<EmpleadoLoginPage> {
                 ),
               ),
             ),
+            const SizedBox(height: 20),
+            Card(
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      _irAFormularioPersonalizado();
+                    },
+                    child: const ListTile(
+                      title: Text(
+                        'Regístrate aquí!!',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      _irACambiarContrasena();
+                    },
+                    child: const ListTile(
+                      title: Text(
+                        'Cambiar contraseña',
+                        style: TextStyle(
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void _irAListaObras() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ObrasListScreen(
+          obrasService: ObrasService(),
+        ),
+      ),
+    );
+  }
+
+  void _irAFormularioPersonalizado() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const RegistrationPage()),
+    );
+  }
+
+  void _irACambiarContrasena() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const EnviarCodigoPage()));
   }
 
   void _mostrarAlerta(String titulo, String mensaje) {
@@ -92,17 +156,6 @@ class _LoginScreenState extends State<EmpleadoLoginPage> {
           ],
         );
       },
-    );
-  }
-
-  void _irAListaObras() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ObrasListScreenEmp(
-          obrasService: ObrasService(),
-        ),
-      ),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:proveedores/Pages/login/logincliente.dart';
-import 'package:proveedores/Pages/login/loginempleado.dart';
+import 'package:proveedores/Pages/login/clientes/logincliente.dart';
+import 'package:proveedores/Pages/login/empleados/loginempleado.dart';
 
 void main() => runApp(const MyApp());
 
@@ -34,15 +34,17 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const ClienteLoginPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const ClienteLoginPage()),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue, // Fondo azul para el botón de Cliente
+                backgroundColor:
+                    Colors.blue, 
               ),
               child: const Text(
                 'Ingresar como cliente',
-                style: TextStyle(color: Colors.white), // Texto negro
+                style: TextStyle(color: Colors.white), 
               ),
             ),
             const SizedBox(height: 20),
@@ -50,15 +52,17 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const EmpleadoLoginPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const EmpleadoLoginPage()),
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey, // Fondo gris para el botón de Empleado
+                backgroundColor:
+                    Colors.grey, 
               ),
               child: const Text(
                 'Ingresar como Empleado',
-                style: TextStyle(color: Colors.white), // Texto negro
+                style: TextStyle(color: Colors.white), 
               ),
             ),
           ],
