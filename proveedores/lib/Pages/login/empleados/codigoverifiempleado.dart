@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import "package:proveedores/Apis/clientes/login.dart";
+import "package:proveedores/Pages/login/empleados/cambiarcontra.dart";
 
-class EnviarCodigoFormCliente extends StatefulWidget {
-  const EnviarCodigoFormCliente({Key? key}) : super(key: key);
+class EnviarCodigoFormEmpleado extends StatefulWidget {
+  const EnviarCodigoFormEmpleado({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
   _EnviarCodigoFormState createState() => _EnviarCodigoFormState();
 }
 
-class _EnviarCodigoFormState extends State<EnviarCodigoFormCliente> {
+class _EnviarCodigoFormState extends State<EnviarCodigoFormEmpleado> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _codigoController = TextEditingController();
 
@@ -40,18 +41,14 @@ class _EnviarCodigoFormState extends State<EnviarCodigoFormCliente> {
               ),
               ElevatedButton(
                 onPressed: () async {
-                  AuthService authService =
-                      AuthService(); 
+                  AuthService authService = AuthService();
                   String? response =
                       await authService.checkcode(_codigoController.text);
-                  String mesaje = "";
+                    debugPrint(response);
                   if (_formKey.currentState!.validate() && response != null) {
-                    mesaje = "Codigo verificado correctamente";
-                    _mostrarMensaje(mesaje, "Excelente!");
-                  } else {
-                    mesaje =
-                        "El codigo no pudo ser verificado, pudo haber excedido los 15 minutos o es un codigo invalido";
-                    _mostrarMensaje(mesaje, "Error");
+                    _mostrarMensajeSi();
+                  }else{
+                    _mostrarMensajeNp();
                   }
                 },
                 child: const Text('Enviar Código'),
@@ -62,18 +59,17 @@ class _EnviarCodigoFormState extends State<EnviarCodigoFormCliente> {
       ),
     );
   }
-
-  void _mostrarMensaje(String mensaje, String titulo) {
+  void _mostrarMensajeSi(){
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text(titulo),
-          content: Text(mensaje),
+          title: const Text("Info"),
+          content: const Text("Redireccionando al formulario para cambiar contraseña"),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); 
+                _irAcambiarContra();
               },
               child: const Text('Aceptar'),
             ),
@@ -81,5 +77,31 @@ class _EnviarCodigoFormState extends State<EnviarCodigoFormCliente> {
         );
       },
     );
+  }
+  void _mostrarMensajeNp(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Error"),
+          content: const Text("No se pudo verificar el codigo"),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Aceptar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+
+
+  void _irAcambiarContra() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => const cambiarcontraemp()));
   }
 }

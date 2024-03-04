@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
 import 'package:proveedores/Apis/clientes/login.dart';
-import 'package:proveedores/Pages/login/clientes/codigoverificliente.dart';
+import 'package:proveedores/Pages/login/empleados/codigoverifiempleado.dart';
 
 class EnviarCodigoPageEmp extends StatefulWidget {
   const EnviarCodigoPageEmp({Key? key}) : super(key: key);
@@ -102,7 +102,7 @@ class _EnviarCodigoPageState extends State<EnviarCodigoPageEmp> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const EnviarCodigoFormCliente()));
+                    builder: (context) => const EnviarCodigoFormEmpleado()));
               },
               child: const Text('Aceptar'),
             ),

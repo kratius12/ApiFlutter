@@ -3,15 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:jwt_decode/jwt_decode.dart';
 
-
 class AuthService {
-  final String baseUrl;
+  final String baseUrl = "http://localhost:4000";
 
-  AuthService(this.baseUrl);
-
+  AuthService();
   Future<String?> loginUser(String username, String password) async {
     final response = await http.post(
-      Uri.parse('http://localhost:4000/login'),
+      Uri.parse('$baseUrl/login'),
       body: jsonEncode({'username': username, 'password': password}),
       headers: {'Content-Type': 'application/json'},
     );
@@ -23,7 +21,8 @@ class AuthService {
       return null;
     }
   }
-   Future<String?> enviarCodigo(String email) async {
+
+  Future<String?> enviarCodigo(String email) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/sendCode'),
@@ -42,7 +41,7 @@ class AuthService {
       return null;
     }
   }
-  
+
   Future<String?> checkcode(String code) async {
     try {
       final response = await http.post(
@@ -60,7 +59,25 @@ class AuthService {
     }
   }
 
-   int? getUserIdFromToken(String token) {
+  Future<String?> changePass(String password, String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/password'),
+        body: jsonEncode({'email': email, 'password': password}),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        return "El cambio de contraseña fue exitoso!";
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
+  int? getUserIdFromToken(String token) {
     try {
       Map<String, dynamic> decodedToken = Jwt.parseJwt(token);
       return decodedToken['idEmp'];

@@ -37,7 +37,6 @@ class AuthService {
       );
 
       if (response.statusCode == 200) {
-        // Map<String, dynamic> data = jsonDecode(response.body);
         return 'codigo enviado correctamente';
       } else {
         return null;
@@ -56,7 +55,7 @@ class AuthService {
         headers: {'Content-Type': 'application/json'},
       );
       if (response.statusCode == 200) {
-        return 'El codigo ha es correcto!';
+        return 'El codigo es correcto!';
       } else {
         return null;
       }

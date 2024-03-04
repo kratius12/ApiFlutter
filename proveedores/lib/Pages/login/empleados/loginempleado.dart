@@ -15,7 +15,7 @@ class EmpleadoLoginPage extends StatefulWidget {
 class _LoginScreenState extends State<EmpleadoLoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  final AuthService authService = AuthService('http://localhost:4000/login');
+  final AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
