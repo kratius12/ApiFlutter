@@ -73,7 +73,7 @@ class AuthService {
       String tipoDoc,
       String cedula,
       // ignore: non_constant_identifier_names
-      String constrasena) async {
+      String contrasena) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/cliente'),
@@ -85,7 +85,7 @@ class AuthService {
           'telefono': telefono,
           'tipoDoc': tipoDoc,
           'cedula': cedula,
-          'constrasena': constrasena,
+          'contrasena': contrasena,
           'estado': 1,
           'fecha_nac': "123213-123123-23222"
         }),

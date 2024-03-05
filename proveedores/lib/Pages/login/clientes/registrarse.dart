@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:proveedores/Apis/clientes/login.dart';
+import 'package:proveedores/Pages/login/clientes/logincliente.dart';
 
 class RegistrationPage extends StatefulWidget {
   // ignore: use_key_in_widget_constructors
@@ -147,9 +148,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         _cedulaController.text,
                         _passwordController.text);
                     if (response != null) {
-                      _mostrarMensaje('Registro exitoso');
+                      _mostrarMensajeSi('Registro exitoso');
                     } else {
-                      _mostrarMensaje('No se pudo regisrar el cliente');
+                      _mostrarMensajeNo('No se pudo regisrar el cliente');
                     }
                   }
                 },
@@ -162,12 +163,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  void _mostrarMensaje(String mensaje) {
+  void _mostrarMensajeSi(String mensaje) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Mensaje'),
+          title: const Text('Info'),
+          content: Text(mensaje),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context)=> const ClienteLoginPage())
+                );
+              },
+              child: const Text('Aceptar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  void _mostrarMensajeNo(String mensaje) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error'),
           content: Text(mensaje),
           actions: [
             TextButton(

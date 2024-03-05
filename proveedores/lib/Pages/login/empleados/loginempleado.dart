@@ -52,15 +52,11 @@ class _LoginScreenState extends State<EmpleadoLoginPage> {
                     usernameController.text,
                     passwordController.text,
                   );
-
-                  if (token != null) {
-                    _mostrarAlerta(
-                        'Login exitoso', 'Se ha logeado correctamente');
-                    _irAListaObras();
-                  } else {
-                    _mostrarAlerta('Error', 'Login fallido.');
-                  }
-                },
+                  int? response = authService.getUserIdFromToken(token!);
+                  _mostrarAlerta(
+                      'Login exitoso', 'Se ha logeado correctamente');
+                  _irAListaObras(response);
+                                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                 ),
@@ -106,7 +102,7 @@ class _LoginScreenState extends State<EmpleadoLoginPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); 
+                Navigator.of(context).pop();
               },
               child: const Text('Aceptar'),
             ),
@@ -116,12 +112,15 @@ class _LoginScreenState extends State<EmpleadoLoginPage> {
     );
   }
 
-  void _irAListaObras() {
+  
+
+  void _irAListaObras(int? response) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ObrasListScreenEmp(
           obrasService: ObrasService(),
+          idEmp: response!,
         ),
       ),
     );
