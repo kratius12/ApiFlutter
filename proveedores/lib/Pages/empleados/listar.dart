@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import "package:proveedores/Apis/clientes/obra.dart";
+import "package:proveedores/Apis/empleados/obra.dart";
+
 class ObrasListScreenEmp extends StatefulWidget {
   final ObrasService obrasService;
   final int idEmp;
-  const ObrasListScreenEmp({super.key, required this.obrasService, required this.idEmp});
+  const ObrasListScreenEmp(
+      {super.key, required this.obrasService, required this.idEmp});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -16,7 +18,7 @@ class _ObrasListScreenState extends State<ObrasListScreenEmp> {
   @override
   void initState() {
     super.initState();
-    _obras = widget.obrasService.getObras();
+    _obras = widget.obrasService.getObras(widget.idEmp);
   }
 
   @override

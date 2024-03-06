@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import "package:proveedores/Apis/clientes/login.dart";
+import "package:proveedores/Apis/empleados/login.dart";
 import "package:proveedores/Pages/login/empleados/cambiarcontra.dart";
 
 class EnviarCodigoFormEmpleado extends StatefulWidget {
