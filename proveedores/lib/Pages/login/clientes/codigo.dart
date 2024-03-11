@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import 'package:proveedores/Apis/clientes/login.dart';
-import 'package:proveedores/Pages/login/clientes/codigoverificliente.dart';
+import 'package:construtech/Apis/clientes/login.dart';
+import 'package:construtech/Pages/login/clientes/codigoverificliente.dart';
 
 class EnviarCodigoPage extends StatefulWidget {
   const EnviarCodigoPage({Key? key}) : super(key: key);

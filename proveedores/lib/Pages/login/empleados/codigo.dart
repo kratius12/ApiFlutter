@@ -1,6 +1,6 @@
 import "package:flutter/material.dart";
-import 'package:proveedores/Apis/empleados/login.dart';
-import 'package:proveedores/Pages/login/empleados/codigoverifiempleado.dart';
+import 'package:construtech/Apis/empleados/login.dart';
+import 'package:construtech/Pages/login/empleados/codigoverifiempleado.dart';
 
 class EnviarCodigoPageEmp extends StatefulWidget {
   const EnviarCodigoPageEmp({Key? key}) : super(key: key);

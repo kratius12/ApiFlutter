@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
-import "package:proveedores/Apis/clientes/login.dart";
+import "package:construtech/Apis/clientes/login.dart";
 
-import "package:proveedores/Pages/clientes/cambiarinformacion.dart";
+import "package:construtech/Pages/clientes/cambiarinformacion.dart";
 
 // ignore: camel_case_types
 class cambiarcontraCli extends StatefulWidget {

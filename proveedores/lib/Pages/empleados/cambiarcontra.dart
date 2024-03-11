@@ -1,7 +1,7 @@
 import "package:flutter/material.dart";
-import "package:proveedores/Apis/empleados/login.dart";
+import "package:construtech/Apis/empleados/login.dart";
 
-import "package:proveedores/Pages/empleados/cambiarinformacion.dart";
+import "package:construtech/Pages/empleados/cambiarinformacion.dart";
 
 // ignore: camel_case_types
 class cambiarcontraEmp extends StatefulWidget {

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:proveedores/Apis/clientes/login.dart';
-import 'package:proveedores/main.dart';
+import 'package:construtech/Apis/clientes/login.dart';
+import 'package:construtech/main.dart';
 import 'package:intl/intl.dart';
 
 class RegistrationPage extends StatefulWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:proveedores/Apis/empleados/obra.dart';
-import 'package:proveedores/Pages/empleados/actualizarestado.dart';
-import 'package:proveedores/main.dart';
-import "package:proveedores/Pages/empleados/cambiarinformacion.dart";
+import 'package:construtech/Apis/empleados/obra.dart';
+import 'package:construtech/Pages/empleados/actualizarestado.dart';
+import 'package:construtech/main.dart';
+import "package:construtech/Pages/empleados/cambiarinformacion.dart";
 
 class ObrasListScreenEmp extends StatefulWidget {
   final ObrasService obrasService;

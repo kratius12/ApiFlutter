@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
-import "package:proveedores/Pages/clientes/cambiarcontra.dart";
-import "package:proveedores/Pages/clientes/informacion.dart";
-import "package:proveedores/Pages/clientes/solicitarservicio.dart";
-import "package:proveedores/main.dart";
+import "package:construtech/Pages/clientes/cambiarcontra.dart";
+import "package:construtech/Pages/clientes/informacion.dart";
+import "package:construtech/Pages/clientes/solicitarservicio.dart";
+import "package:construtech/main.dart";
 
 // ignore: camel_case_types
 class cambiarInfoScreen extends StatefulWidget {

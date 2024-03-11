@@ -1,9 +1,9 @@
 import "package:flutter/material.dart";
-import "package:proveedores/Apis/clientes/obra.dart";
-import "package:proveedores/main.dart";
-import 'package:proveedores/Pages/clientes/obras.dart';
+import "package:construtech/Apis/clientes/obra.dart";
+import "package:construtech/main.dart";
+import 'package:construtech/Pages/clientes/obras.dart';
 import 'package:intl/intl.dart';
-import "package:proveedores/Pages/clientes/cambiarinformacion.dart";
+import "package:construtech/Pages/clientes/cambiarinformacion.dart";
 
 class SolicitarServicioForm extends StatefulWidget {
   final int idCli;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:proveedores/Pages/login/clientes/logincliente.dart';
-import 'package:proveedores/Pages/login/empleados/loginempleado.dart';
+import 'package:construtech/Pages/login/clientes/logincliente.dart';
+import 'package:construtech/Pages/login/empleados/loginempleado.dart';
 
 void main() => runApp(const MyApp());
 

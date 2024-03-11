@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import "package:proveedores/Apis/clientes/login.dart";
-import "package:proveedores/Pages/login/clientes/cambiarcontra.dart";
+import "package:construtech/Apis/clientes/login.dart";
+import "package:construtech/Pages/login/clientes/cambiarcontra.dart";
 
 class EnviarCodigoFormCliente extends StatefulWidget {
   final String email;
