@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import "package:proveedores/Apis/clientes/login.dart";
+import "package:proveedores/Pages/login/clientes/cambiarcontra.dart";
 
 class EnviarCodigoFormCliente extends StatefulWidget {
-  const EnviarCodigoFormCliente({Key? key}) : super(key: key);
+  final String email;
+  const EnviarCodigoFormCliente({Key? key, required this.email})
+      : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -38,7 +41,9 @@ class _EnviarCodigoFormState extends State<EnviarCodigoFormCliente> {
                   return null;
                 },
               ),
+              const SizedBox(height: 20.0,),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 onPressed: () async {
                   AuthService authService =
                       AuthService(); // Crear instancia de AuthService
@@ -47,14 +52,17 @@ class _EnviarCodigoFormState extends State<EnviarCodigoFormCliente> {
                   String mesaje = "";
                   if (_formKey.currentState!.validate() && response != null) {
                     mesaje = "Codigo verificado correctamente";
-                    _mostrarMensaje(mesaje, "Excelente!");
+                    _mostrarMensajeOK(mesaje, "Excelente!", widget.email);
                   } else {
                     mesaje =
                         "El codigo no pudo ser verificado, pudo haber excedido los 15 minutos o es un codigo invalido";
                     _mostrarMensaje(mesaje, "Error");
                   }
                 },
-                child: const Text('Enviar Código'),
+                child: const Text(
+                  'Enviar Código',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -74,6 +82,31 @@ class _EnviarCodigoFormState extends State<EnviarCodigoFormCliente> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
+              },
+              child: const Text('Aceptar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _mostrarMensajeOK(String mensaje, String titulo, String email) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(titulo),
+          content: Text(mensaje),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => cambiarcontraCli(
+                              email: email,
+                            )));
               },
               child: const Text('Aceptar'),
             ),

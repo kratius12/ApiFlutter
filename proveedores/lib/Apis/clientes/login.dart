@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:jwt_decode/jwt_decode.dart';
 
 class AuthService {
-  final String baseUrl = "http://localhost:4000";
+  final String baseUrl = "https://apismovilconstru.onrender.com";
 
   AuthService();
 
@@ -23,7 +23,6 @@ class AuthService {
         return null;
       }
     } catch (e) {
-      debugPrint('Error al realizar la solicitud: $e');
       return null;
     }
   }
@@ -47,6 +46,41 @@ class AuthService {
     }
   }
 
+  Future<int> changePass(String password, String email) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/passwordCli'),
+        body: jsonEncode({'email': email, 'password': password}),
+        headers: {'Content-Type': 'application/json'},
+      );
+      if (response.statusCode == 200) {
+        return 1;
+      } else {
+        return 2;
+      }
+    } catch (e) {
+      return 2;
+    }
+  }
+
+  Future<String?> changePassEn(String password, int email) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/passwordCliEn'),
+        body: jsonEncode({'idCli': email, 'password': password}),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        return "El cambio de contraseña fue exitoso!";
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
+    }
+  }
+
   Future<String?> checkcode(String code) async {
     try {
       final response = await http.post(
@@ -64,6 +98,57 @@ class AuthService {
     }
   }
 
+  Future<Map<String, dynamic>> fetchCliente(int id) async {
+    final response = await http.get(Uri.parse('$baseUrl/cliente/$id'));
+
+    if (response.statusCode == 200) {
+      // Si la solicitud fue exitosa, decodifica el cuerpo JSON de la respuesta.
+      return json.decode(response.body);
+    } else {
+      // Si la solicitud no fue exitosa, lanza una excepción.
+      throw Exception('Error al cargar los datos del cliente');
+    }
+  }
+
+  Future<int> checkEmail(String email, int? id) async {
+    final response =
+        await http.get(Uri.parse('$baseUrl/checkEmail/$email/$id'));
+
+    if (response.statusCode == 203) {
+      return 2;
+    } else {
+      return 1;
+    }
+  }
+
+  Future<String?> updateUser(
+      int id,
+      String nombre,
+      String apellidos,
+      String tipoDoc,
+      String cedula,
+      String direccion,
+      String email,
+      String fechaNac,
+      String telefono) async {
+    final response = await http.put(Uri.parse('$baseUrl/clienteMo/$id'), body: {
+      "nombre": nombre,
+      "apellidos": apellidos,
+      "tipoDoc": tipoDoc,
+      "cedula": cedula,
+      "direccion": direccion,
+      "email": email,
+      "fecha_nac": fechaNac,
+      "telefono": telefono
+    });
+
+    if (response.statusCode == 200) {
+      return "Cliente actualizado con exito";
+    } else {
+      return null;
+    }
+  }
+
   Future<String?> register(
       String nombre,
       String apellidos,
@@ -72,7 +157,7 @@ class AuthService {
       String telefono,
       String tipoDoc,
       String cedula,
-      // ignore: non_constant_identifier_names
+      String fechaNac,
       String contrasena) async {
     try {
       final response = await http.post(
@@ -87,7 +172,7 @@ class AuthService {
           'cedula': cedula,
           'contrasena': contrasena,
           'estado': 1,
-          'fecha_nac': "123213-123123-23222"
+          'fecha_nac': fechaNac
         }),
         headers: {'Content-Type': 'application/json'},
       );
@@ -106,7 +191,6 @@ class AuthService {
       Map<String, dynamic> decodedToken = Jwt.parseJwt(token);
       return decodedToken['idCli'];
     } catch (e) {
-      debugPrint('Error al decodificar el token: $e');
       return null;
     }
   }

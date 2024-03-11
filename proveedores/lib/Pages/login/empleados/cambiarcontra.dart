@@ -4,7 +4,8 @@ import "package:proveedores/Pages/login/empleados/loginempleado.dart";
 
 // ignore: camel_case_types
 class cambiarcontraemp extends StatefulWidget {
-  const cambiarcontraemp({Key? key}) : super(key: key);
+  final String email;
+  const cambiarcontraemp({Key? key, required this.email}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -16,7 +17,6 @@ class _cambiarcontraempState extends State<cambiarcontraemp> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _contrasenaController = TextEditingController();
   final TextEditingController _confirmarController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,18 +30,6 @@ class _cambiarcontraempState extends State<cambiarcontraemp> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: "Verifique el email",
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return "Por favor verfique su email";
-                    }
-                    return null;
-                  },
-                ),
                 TextFormField(
                   controller: _contrasenaController,
                   obscureText: true,
@@ -58,7 +46,8 @@ class _cambiarcontraempState extends State<cambiarcontraemp> {
                   controller: _confirmarController,
                   obscureText: true,
                   decoration: const InputDecoration(
-                      labelText: "Confirme su contraseña"),
+                    labelText: "Confirme su contraseña",
+                  ),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return "Por favor confirme su contraseña nueva";
@@ -73,17 +62,20 @@ class _cambiarcontraempState extends State<cambiarcontraemp> {
                   height: 20,
                 ),
                 ElevatedButton(
-                    onPressed: () async {
-                      AuthService authService = AuthService();
-                      String? response = await authService.changePass(
-                          _contrasenaController.text, _emailController.text);
-                      if (response != null) {
-                        _mostrarMensajeSi();
-                      } else {
-                        _mostrarMensajeNo();
-                      }
-                    },
-                    child: const Text("Cambiar contraseña"))
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                  onPressed: () async {
+                    AuthService authService = AuthService();
+                    String? response = await authService.changePass(
+                        _contrasenaController.text, widget.email);
+                    if (response != null) {
+                      _mostrarMensajeSi();
+                    } else {
+                      _mostrarMensajeNo();
+                    }
+                  },
+                  child: const Text("Cambiar contraseña",
+                      style: TextStyle(color: Colors.white)),
+                )
               ],
             )),
       ),
@@ -132,7 +124,10 @@ class _cambiarcontraempState extends State<cambiarcontraemp> {
   }
 
   void _irALogin() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const EmpleadoLoginPage()));
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const EmpleadoLoginPage()),
+      (route) => false,
+    );
   }
 }

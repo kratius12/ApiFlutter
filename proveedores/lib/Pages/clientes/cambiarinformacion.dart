@@ -1,40 +1,24 @@
-import 'package:flutter/material.dart';
-import "package:proveedores/Apis/clientes/obra.dart";
-import "package:proveedores/main.dart";
+import "package:flutter/material.dart";
+import "package:proveedores/Pages/clientes/cambiarcontra.dart";
+import "package:proveedores/Pages/clientes/informacion.dart";
 import "package:proveedores/Pages/clientes/solicitarservicio.dart";
-import "package:proveedores/Pages/clientes/cambiarinformacion.dart";
+import "package:proveedores/main.dart";
 
-class ObrasListScreen extends StatefulWidget {
-  final ObrasService obrasService;
+// ignore: camel_case_types
+class cambiarInfoScreen extends StatefulWidget {
   final int idCli;
-
-  const ObrasListScreen({
-    Key? key, // Use Key? key instead of super.key
-    required this.obrasService,
-    required this.idCli,
-  }) : super(key: key);
-
+  const cambiarInfoScreen({super.key, required this.idCli});
   @override
   // ignore: library_private_types_in_public_api
-  _ObrasListScreenState createState() => _ObrasListScreenState();
+  _CambiarInfoScreen createState() => _CambiarInfoScreen();
 }
 
-class _ObrasListScreenState extends State<ObrasListScreen> {
-  late Future<List<Obra>> _obras;
-
-  get idCli => widget.idCli;
-
-  @override
-  void initState() {
-    super.initState();
-    _obras = widget.obrasService.getObras(widget.idCli);
-  }
-
+class _CambiarInfoScreen extends State<cambiarInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Obras clientes'),
+        title: const Text("Cambiar Información"),
       ),
       drawer: Drawer(
         backgroundColor: Colors.grey,
@@ -60,7 +44,8 @@ class _ObrasListScreenState extends State<ObrasListScreen> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => cambiarInfoScreen(idCli: idCli),
+                    builder: (context) =>
+                        cambiarInfoScreen(idCli: widget.idCli),
                   ),
                 );
               },
@@ -102,26 +87,49 @@ class _ObrasListScreenState extends State<ObrasListScreen> {
           ],
         ),
       ),
-      body: FutureBuilder<List<Obra>>(
-        future: _obras,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return Card(
-                    child: ListTile(
-                  title: Text(snapshot.data![index].descripcion),
-                  subtitle: Text('Estado: ${snapshot.data![index].estado}'),
-                ));
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => cambiarcontraCli(
+                            idCli: widget.idCli,
+                          )),
+                );
               },
-            );
-          }
-        },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+              ),
+              child: const Text(
+                'Cambiar Contraseña',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CambiarInfoForm(
+                            idCli: widget.idCli,
+                          )),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+              ),
+              child: const Text(
+                'Cambiar Información de Usuario',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

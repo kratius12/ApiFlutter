@@ -3,7 +3,9 @@ import "package:proveedores/Apis/empleados/login.dart";
 import "package:proveedores/Pages/login/empleados/cambiarcontra.dart";
 
 class EnviarCodigoFormEmpleado extends StatefulWidget {
-  const EnviarCodigoFormEmpleado({Key? key}) : super(key: key);
+  final String email;
+  const EnviarCodigoFormEmpleado({Key? key, required this.email})
+      : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -39,19 +41,26 @@ class _EnviarCodigoFormState extends State<EnviarCodigoFormEmpleado> {
                   return null;
                 },
               ),
+              const SizedBox(
+                height: 20.0,
+              ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 onPressed: () async {
                   AuthService authService = AuthService();
                   String? response =
                       await authService.checkcode(_codigoController.text);
-                    debugPrint(response);
+                  debugPrint(response);
                   if (_formKey.currentState!.validate() && response != null) {
                     _mostrarMensajeSi();
-                  }else{
+                  } else {
                     _mostrarMensajeNp();
                   }
                 },
-                child: const Text('Enviar Código'),
+                child: const Text(
+                  'Enviar Código',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -59,17 +68,19 @@ class _EnviarCodigoFormState extends State<EnviarCodigoFormEmpleado> {
       ),
     );
   }
-  void _mostrarMensajeSi(){
+
+  void _mostrarMensajeSi() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Info"),
-          content: const Text("Redireccionando al formulario para cambiar contraseña"),
+          content: const Text(
+              "Redireccionando al formulario para cambiar contraseña"),
           actions: [
             TextButton(
               onPressed: () {
-                _irAcambiarContra();
+                _irAcambiarContra(widget.email);
               },
               child: const Text('Aceptar'),
             ),
@@ -78,7 +89,8 @@ class _EnviarCodigoFormState extends State<EnviarCodigoFormEmpleado> {
       },
     );
   }
-  void _mostrarMensajeNp(){
+
+  void _mostrarMensajeNp() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -98,10 +110,10 @@ class _EnviarCodigoFormState extends State<EnviarCodigoFormEmpleado> {
     );
   }
 
-
-
-  void _irAcambiarContra() {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => const cambiarcontraemp()));
+  void _irAcambiarContra(String email) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => cambiarcontraemp(email: email)));
   }
 }

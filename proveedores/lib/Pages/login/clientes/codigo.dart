@@ -43,6 +43,7 @@ class _EnviarCodigoPageState extends State<EnviarCodigoPage> {
               ),
               const SizedBox(height: 20),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 onPressed: () async {
                   String? resultado =
                       await AuthService().enviarCodigo(_emailController.text);
@@ -50,14 +51,17 @@ class _EnviarCodigoPageState extends State<EnviarCodigoPage> {
                     String mensaje = "";
                     if (resultado != null) {
                       mensaje = "Código enviado exitosamente.";
-                      _mostrarMensajeOk('Info', mensaje);
+                      _mostrarMensajeOk('Info', mensaje, _emailController.text);
                     } else {
                       mensaje = "No se pudo enviar el código de verificación.";
                       _mostrarMensaje('Error', mensaje);
                     }
                   }
                 },
-                child: const Text('Enviar Código'),
+                child: const Text(
+                  'Enviar Código',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
@@ -67,9 +71,6 @@ class _EnviarCodigoPageState extends State<EnviarCodigoPage> {
   }
 
   bool isValidEmail(String email) {
-    // Puedes usar una expresión regular o cualquier lógica que prefieras
-    // para validar la estructura del correo electrónico.
-    // Este es solo un ejemplo básico.
     return RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$').hasMatch(email);
   }
 
@@ -93,7 +94,7 @@ class _EnviarCodigoPageState extends State<EnviarCodigoPage> {
     );
   }
 
-  void _mostrarMensajeOk(String titulo, String mensaje) {
+  void _mostrarMensajeOk(String titulo, String mensaje, String email) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -104,7 +105,8 @@ class _EnviarCodigoPageState extends State<EnviarCodigoPage> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => const EnviarCodigoFormCliente()));
+                    builder: (context) =>
+                        EnviarCodigoFormCliente(email: email)));
               },
               child: const Text('Aceptar'),
             ),

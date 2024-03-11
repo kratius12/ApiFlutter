@@ -6,8 +6,7 @@ import 'package:proveedores/Pages/login/clientes/registrarse.dart';
 import 'package:proveedores/Pages/login/clientes/codigo.dart';
 
 class ClienteLoginPage extends StatefulWidget {
-  // ignore: use_key_in_widget_constructors
-  const ClienteLoginPage({Key? key});
+  const ClienteLoginPage({super.key});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -15,112 +14,125 @@ class ClienteLoginPage extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<ClienteLoginPage> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final AuthService authService = AuthService();
 
+  String? validateRequired(String? value) {
+    if (value == null || value.isEmpty || value == "") {
+      return 'Campo requerido';
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login cliente'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              'assets/Logo.PNG',
-              height: 200,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextField(
-              controller: usernameController,
-              decoration: const InputDecoration(labelText: 'Email'),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: passwordController,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Contraseña'),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: 400,
-              child: ElevatedButton(
-                onPressed: () async {
-                  String? token = await authService.loginUser(
-                    usernameController.text,
-                    passwordController.text,
-                  );
-
-                  if (token != null) {
-                    _mostrarAlerta(
-                        'Login exitoso', 'Se ha logeado correctamente');
-
-                    _irAListaObras();
-                  } else {
-                    _mostrarAlerta('Error', 'Login fallido.');
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                ),
-                child: const Text(
-                  'Ingresar',
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            Card(
+        appBar: AppBar(
+          title: const Text('Login cliente'),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      _irAFormularioPersonalizado();
-                    },
-                    child: const ListTile(
-                      title: Text(
-                        'Regístrate aquí!!',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline,
-                        ),
+                  Image.asset(
+                    'assets/Logo.PNG',
+                    height: 200,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  TextFormField(
+                    controller: usernameController,
+                    decoration: const InputDecoration(labelText: 'Email'),
+                    validator: (value) => validateRequired(value),
+                  ),
+                  const SizedBox(height: 10),
+                  TextFormField(
+                    controller: passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(labelText: 'Contraseña'),
+                    validator: (value) => validateRequired(value),
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: 400,
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          String? token = await authService.loginUser(
+                            usernameController.text,
+                            passwordController.text,
+                          );
+                          int? response =
+                              authService.getUserIdFromToken(token!);
+                          print(token);
+
+                          _irAListaObras(response);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                      ),
+                      child: const Text(
+                        'Ingresar',
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      _irACambiarContrasena();
-                    },
-                    child: const ListTile(
-                      title: Text(
-                        'Cambiar contraseña',
-                        style: TextStyle(
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline,
+                  const SizedBox(height: 20),
+                  Card(
+                    child: Column(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _irAFormularioPersonalizado();
+                          },
+                          child: const ListTile(
+                            title: Text(
+                              'Regístrate aquí!!',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        GestureDetector(
+                          onTap: () {
+                            _irACambiarContrasena();
+                          },
+                          child: const ListTile(
+                            title: Text(
+                              'Cambiar contraseña',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
+          ),
+        ));
   }
 
-  void _irAListaObras() {
+  void _irAListaObras(idCli) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ObrasListScreen(
+          idCli: idCli,
           obrasService: ObrasService(),
         ),
       ),
@@ -137,25 +149,5 @@ class _LoginScreenState extends State<ClienteLoginPage> {
   void _irACambiarContrasena() {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => const EnviarCodigoPage()));
-  }
-
-  void _mostrarAlerta(String titulo, String mensaje) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(titulo),
-          content: Text(mensaje),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Cerrar la alerta
-              },
-              child: const Text('Aceptar'),
-            ),
-          ],
-        );
-      },
-    );
   }
 }
