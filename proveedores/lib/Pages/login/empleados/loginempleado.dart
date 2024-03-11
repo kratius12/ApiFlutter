@@ -68,6 +68,8 @@ class _LoginScreenState extends State<EmpleadoLoginPage> {
                       SizedBox(
                           width: 400,
                           child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue),
                             onPressed: () {
                               // Validar campos antes de iniciar la transición de carga
                               if (_formKey.currentState!.validate()) {
@@ -94,7 +96,10 @@ class _LoginScreenState extends State<EmpleadoLoginPage> {
                                 });
                               }
                             },
-                            child: const Text("Ingresar"),
+                            child: const Text(
+                              "Ingresar",
+                              style: TextStyle(color: Colors.white),
+                            ),
                             // Resto del código...
                           )),
                       Card(
