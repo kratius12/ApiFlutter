@@ -3,9 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:construtech/Apis/empleados/login.dart';
 import 'dart:convert';
 import "package:construtech/main.dart";
-import 'package:construtech/Pages/empleados/listar.dart';
 import 'package:construtech/Pages/empleados/cambiarinformacion.dart';
-import "package:construtech/Apis/empleados/obra.dart";
 
 class EmployeeForm extends StatefulWidget {
   final int idEmp;
@@ -60,67 +58,23 @@ class _EmployeeFormState extends State<EmployeeForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Formulario de Empleado'),
-      ),
-      drawer: Drawer(
         backgroundColor: Colors.grey,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/LogoBlanco.png'))),
-              child: Text(""),
-            ),
-            ListTile(
-              title: const Text('Obras', style: TextStyle(color: Colors.white)),
-              onTap: () {
-                ObrasService obrasService = ObrasService();
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ObrasListScreenEmp(
-                            obrasService: obrasService, idEmp: widget.idEmp)),
-                    (route) => false);
-              },
-            ),
-            ListTile(
-              title: const Text(
-                'Cambiar la información de usuario',
-                style: TextStyle(color: Colors.white),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: ((context) => cambiarInfoScreen(
-                              idEmp: widget.idEmp,
-                            ))));
-              },
-            ),
-            const SizedBox(
-              height: 500,
-            ),
-            ListTile(
-              title: const Text(
-                'Cerrar sesión',
-                style: TextStyle(
-                  color: Colors.white,
+        title: const Text("Información de perfil", style: TextStyle(color:Colors.white)),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.power_settings_new, color: Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomePage(),
                 ),
-              ),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HomePage(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+              );
+            },
+          ),
+        ],
       ),
+      
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -177,7 +131,7 @@ class _EmployeeFormState extends State<EmployeeForm> {
               ),
               const SizedBox(height: 16.0),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue, ),
                 onPressed: () async {
                   AuthService authService = AuthService();
                   String? response = await authService.updateEmp(

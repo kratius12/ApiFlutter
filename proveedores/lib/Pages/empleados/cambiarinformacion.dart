@@ -1,9 +1,7 @@
 import "package:flutter/material.dart";
-import "package:construtech/Apis/empleados/obra.dart";
 import "package:construtech/Pages/empleados/cambiarcontra.dart";
 import "package:construtech/Pages/empleados/informacion.dart";
 import "package:construtech/main.dart";
-import "package:construtech/Pages/empleados/listar.dart";
 
 // ignore: camel_case_types
 class cambiarInfoScreen extends StatefulWidget {
@@ -19,71 +17,31 @@ class _CambiarInfoScreen extends State<cambiarInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Cambiar Información"),
-      ),
-      drawer: Drawer(
         backgroundColor: Colors.grey,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/LogoBlanco.png'))),
-              child: Text(""),
-            ),
-            ListTile(
-              title: const Text('Obras', style: TextStyle(color: Colors.white)),
-              onTap: () {
-                ObrasService obrasService = ObrasService();
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ObrasListScreenEmp(
-                            obrasService: obrasService, idEmp: widget.idEmp)),
-                    (route) => false);
-              },
-            ),
-            ListTile(
-              title: const Text(
-                'Cambiar la información de usuario',
-                style: TextStyle(color: Colors.white),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: ((context) => cambiarInfoScreen(
-                              idEmp: widget.idEmp,
-                            ))));
-              },
-            ),
-            const SizedBox(
-              height: 500,
-            ),
-            ListTile(
-              title: const Text(
-                'Cerrar sesión',
-                style: TextStyle(
-                  color: Colors.white,
+        title: const Text("Cambiar Información de perfil", style: TextStyle(color:Colors.white)),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.power_settings_new, color: Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomePage(),
                 ),
-              ),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HomePage(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+              );
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset(
+              'assets/Logo.PNG',
+              height: 200,
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -112,10 +70,10 @@ class _CambiarInfoScreen extends State<cambiarInfoScreen> {
                             )));
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.grey,
               ),
               child: const Text(
-                'Cambiar Información de Usuario',
+                'Cambiar Información de perfil',
                 style: TextStyle(color: Colors.white),
               ),
             ),

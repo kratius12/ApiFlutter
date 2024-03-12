@@ -129,7 +129,6 @@ class _SolicitarServicioFormState extends State<SolicitarServicioForm> {
                             firstDate: DateTime.now(),
                             lastDate: DateTime(2300),
                           );
-
                           if (pickedDate != null) {
                             fechaController.text = pickedDate.toString();
                           }

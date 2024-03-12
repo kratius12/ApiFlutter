@@ -148,22 +148,22 @@ class _LoginScreenState extends State<EmpleadoLoginPage> {
   }
 
   void _irAListaObras(int? response) {
-    Navigator.push(
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
         builder: (context) => ObrasListScreenEmp(
           obrasService: ObrasService(),
           idEmp: response!,
         ),
-      ),
+      ), (route) => false,
     );
   }
 
   void _irACambiarContra() {
-    Navigator.push(
+    Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
           builder: (context) => const EnviarCodigoPageEmp(),
-        ));
+        ), (route) => false);
   }
 }

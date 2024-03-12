@@ -1,3 +1,4 @@
+import "package:construtech/main.dart";
 import "package:flutter/material.dart";
 import "package:construtech/Apis/empleados/login.dart";
 
@@ -27,8 +28,22 @@ class _cambiarcontraEmpState extends State<cambiarcontraEmp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Cambiar contraseña"),
+     appBar: AppBar(
+        backgroundColor: Colors.grey,
+        title: const Text("Cambiar contraseña", style: TextStyle(color:Colors.white)),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.power_settings_new, color: Colors.white),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomePage(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

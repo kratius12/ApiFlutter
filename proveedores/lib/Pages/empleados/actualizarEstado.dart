@@ -37,7 +37,11 @@ class _DetalleActividadFormState extends State<DetalleActividadForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Detalle de Actividad'),
+        backgroundColor: Colors.grey,
+        title: const Text(
+          'Detalle de Actividad',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -45,7 +49,7 @@ class _DetalleActividadFormState extends State<DetalleActividadForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Actividad'),
+              decoration: const InputDecoration(labelText: 'Descripción'),
               initialValue: widget.actividad.actividad,
               readOnly: true,
             ),
@@ -55,13 +59,14 @@ class _DetalleActividadFormState extends State<DetalleActividadForm> {
               readOnly: true,
             ),
             TextFormField(
-              decoration: const InputDecoration(labelText: 'Fecha fin'),
+              decoration: const InputDecoration(labelText: 'Dias estimados'),
               initialValue: widget.actividad.fechafin?.toString(),
               readOnly: true,
             ),
             const SizedBox(height: 15),
             DropdownButtonFormField<String>(
-              decoration: const InputDecoration(labelText: 'Estado'),
+              decoration:
+                  const InputDecoration(labelText: 'Estado de la actividad'),
               value: _selectedEstado,
               onChanged: (String? newValue) {
                 setState(() {
@@ -77,24 +82,32 @@ class _DetalleActividadFormState extends State<DetalleActividadForm> {
               }).toList(),
             ),
             const SizedBox(height: 15),
-            ElevatedButton(
-              onPressed: () async {
-                String? response;
-                ObrasService obrasService = ObrasService();
 
-                response = await obrasService.updateActividad(
-                  widget.actividad.id as int,
-                  _selectedEstado,
-                );
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                ),
+                onPressed: () async {
+                  String? response;
+                  ObrasService obrasService = ObrasService();
+                  response = await obrasService.updateActividad(
+                    widget.actividad.id as int,
+                    _selectedEstado,
+                  );
 
-                if (response == "OK") {
-                  _mostrarAlertaSI();
-                } else {
-                  _mostrarAlertaNO();
-                }
-              },
-              child: const Text("Editar"),
-            ),
+                  if (response == "OK") {
+                    _mostrarAlertaSI();
+                  } else {
+                    _mostrarAlertaNO();
+                  }
+                },
+                child: const Text(
+                  "Guardar",
+                  style: TextStyle(color: Colors.white),
+                )),
+            )
+            
           ],
         ),
       ),

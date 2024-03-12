@@ -45,10 +45,41 @@ class ObrasService {
       return null;
     }
   }
+
+  Future<int?> createActividad(String actividad,
+   String fechaini,
+    int fechafin,
+      String estado,
+       int idEmp,
+        int idObra
+        ) async {
+    try {
+      final response = await http.post(
+        Uri.parse("https://apismovilconstru.onrender.com/AddActividadMov"),
+        body: ({
+          "actividad": actividad,
+          "fechaini": fechaini,
+          "fechafin": fechafin,
+          "estado": "En proceso",
+          "idObra": idObra,
+          "idEmp": idEmp
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        return 1;
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
 }
 
 class ObraDetalle {
-  final int? idObra;
+  final int idObra;
   final String? descripcion;
   final String? fechaini;
   final String? fechafin;
@@ -61,7 +92,7 @@ class ObraDetalle {
   final List<Actividad> actividades;
 
   ObraDetalle({
-    this.idObra,
+    required this.idObra,
     this.descripcion,
     this.fechaini,
     this.fechafin,
@@ -89,8 +120,8 @@ class ObraDetalle {
       estado: json['estado'],
       area: json['area'],
       createdAt: json['createdAt'],
-      idCliente: json['cliente']['nombre'],
-      idEmp: json['empleado']['nombre'],
+      idCliente: json['cliente']['nombre'] + " " + json['cliente']['apellidos'],
+      idEmp: json['empleado']['nombre'] + " " + json['empleado']['apellidos'],
       precio: json['precio'],
       actividades: actividades,
     );
