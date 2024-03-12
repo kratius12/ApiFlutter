@@ -78,9 +78,6 @@ class _DetalleActividadFormState extends State<AddActividadForm> {
               decoration: const InputDecoration(labelText: 'Dias estimados'),
               controller: FechFinController,
               keyboardType: TextInputType.number,
-              inputFormatters: <TextInputFormatter>[
-                FilteringTextInputFormatter.digitsOnly
-              ],
             ),
 
             const SizedBox(height: 15),
@@ -109,14 +106,11 @@ class _DetalleActividadFormState extends State<AddActividadForm> {
                     backgroundColor: Colors.blue,
                   ),
                   onPressed: ()  async{
-                    late int fechafin = int.parse(FechFinController.text);
-                    print(widget.idEmp+1);
-                    print(widget.idObra+1);
                     ObrasService obrasService = ObrasService();
                     int? response = await  obrasService.createActividad(
                         ActividadController.text,
                         FechaIniController.text ,
-                        fechafin,
+                        FechFinController.text,
                         EstadoController.text,
                         widget.idEmp,
                         widget.idObra

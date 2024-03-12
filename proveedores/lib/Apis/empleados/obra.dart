@@ -46,13 +46,8 @@ class ObrasService {
     }
   }
 
-  Future<int?> createActividad(String actividad,
-   String fechaini,
-    int fechafin,
-      String estado,
-       int idEmp,
-        int idObra
-        ) async {
+  Future<int?> createActividad(
+      actividad, fechaini, fechafin, estado, idEmp, idObra) async {
     try {
       final response = await http.post(
         Uri.parse("https://apismovilconstru.onrender.com/AddActividadMov"),
@@ -60,7 +55,7 @@ class ObrasService {
           "actividad": actividad,
           "fechaini": fechaini,
           "fechafin": fechafin,
-          "estado": "En proceso",
+          "estado": estado,
           "idObra": idObra,
           "idEmp": idEmp
         }),
@@ -86,9 +81,9 @@ class ObraDetalle {
   final String? estado;
   final String? area;
   final String? createdAt;
-  final String? idCliente; // Cambiado a int
-  final String? idEmp; // Cambiado a int
-  final int? precio; // Cambiado a int
+  final String? idCliente;
+  final String? idEmp;
+  final int? precio;
   final List<Actividad> actividades;
 
   ObraDetalle({
