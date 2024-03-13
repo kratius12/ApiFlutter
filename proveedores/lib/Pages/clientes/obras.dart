@@ -113,7 +113,7 @@ class _ObrasListScreenState extends State<ObrasListScreen> {
             itemBuilder: (context, index) {
               return Card(
                 child: ListTile(
-                  title: Text(snapshot.data![index].descripcion),
+                  title: Text('${snapshot.data![index].descripcion}'),
                   subtitle: Text('Estado: ${snapshot.data![index].estado}'),
                   onTap: () {
                     _mostrarObra(snapshot.data![index]);
