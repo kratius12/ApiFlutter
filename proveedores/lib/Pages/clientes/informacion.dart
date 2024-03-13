@@ -32,8 +32,8 @@ class CambiarInfoFormState extends State<CambiarInfoForm> {
   }
 
   Future<void> fetchData() async {
-    final response = await http
-        .get(Uri.parse('https://apismovilconstru.onrender.com/cliente/${widget.idCli}'));
+    final response = await http.get(Uri.parse(
+        'https://apismovilconstru.onrender.com/cliente/${widget.idCli}'));
 
     if (response.statusCode == 200) {
       // Si la solicitud fue exitosa, decodifica el cuerpo JSON de la respuesta.
@@ -58,21 +58,21 @@ class CambiarInfoFormState extends State<CambiarInfoForm> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Información personal'),
+          backgroundColor: Colors.grey,
+          title: const Text('Información personal', style: TextStyle(color: Colors.white),),
           actions: [
-                IconButton(
-                  icon:
-                      const Icon(Icons.power_settings_new, color: Colors.white),
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(),
-                      ), (route)=> false
-                    );
-                  },
-                ),
-              ],
+            IconButton(
+              icon: const Icon(Icons.power_settings_new, color: Colors.white),
+              onPressed: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const HomePage(),
+                    ),
+                    (route) => false);
+              },
+            ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Padding(

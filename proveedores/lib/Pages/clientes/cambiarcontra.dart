@@ -4,17 +4,14 @@ import "package:construtech/Apis/clientes/login.dart";
 
 import "package:construtech/Pages/clientes/cambiarinformacion.dart";
 
-// ignore: camel_case_types
 class cambiarcontraCli extends StatefulWidget {
   final int idCli;
   const cambiarcontraCli({Key? key, required this.idCli}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _cambiarcontracliState createState() => _cambiarcontracliState();
 }
 
-// ignore: camel_case_types
 class _cambiarcontracliState extends State<cambiarcontraCli> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _contrasenaController = TextEditingController();
@@ -29,21 +26,21 @@ class _cambiarcontracliState extends State<cambiarcontraCli> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Cambiar contraseña"),
+        backgroundColor: Colors.grey,
+        title: const Text("Cambiar contraseña", style: TextStyle(color: Colors.white),),
         actions: [
-                IconButton(
-                  icon:
-                      const Icon(Icons.power_settings_new, color: Colors.white),
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(),
-                      ), (route)=> false
-                    );
-                  },
-                ),
-              ],
+          IconButton(
+            icon: const Icon(Icons.power_settings_new, color: Colors.white),
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const HomePage(),
+                ), (route) => false
+              );
+            },
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -97,35 +94,37 @@ class _cambiarcontracliState extends State<cambiarcontraCli> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 onPressed: () async {
-                  // Muestra el indicador de carga durante la solicitud
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const AlertDialog(
-                        content: Row(
-                          children: [
-                            CircularProgressIndicator(),
-                            SizedBox(width: 16.0),
-                            Text("Cambiando contraseña..."),
-                          ],
-                        ),
-                      );
-                    },
-                    barrierDismissible: false,
-                  );
+                  // Validar el formulario
+                  if (_formKey.currentState!.validate()) {
+                    // Muestra el indicador de carga durante la solicitud
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const AlertDialog(
+                          content: Row(
+                            children: [
+                              CircularProgressIndicator(),
+                              SizedBox(width: 16.0),
+                              Text("Cambiando contraseña..."),
+                            ],
+                          ),
+                        );
+                      },
+                      barrierDismissible: false,
+                    );
 
-                  // Realiza la solicitud y espera la respuesta
-                  String? response = await _changePassword();
+                    // Realiza la solicitud y espera la respuesta
+                    String? response = await _changePassword();
 
-                  // Cierra el indicador de carga
-                  // ignore: use_build_context_synchronously
-                  Navigator.of(context).pop();
+                    // Cierra el indicador de carga
+                    Navigator.of(context).pop();
 
-                  // Muestra el mensaje y redirige según la respuesta
-                  if (response != null && _formKey.currentState!.validate()) {
-                    _mostrarMensajeSi();
-                  } else {
-                    _mostrarMensajeNo();
+                    // Muestra el mensaje y redirige según la respuesta
+                    if (response != null) {
+                      _mostrarMensajeSi();
+                    } else {
+                      _mostrarMensajeNo();
+                    }
                   }
                 },
                 child: const Text(
@@ -148,13 +147,14 @@ class _cambiarcontracliState extends State<cambiarcontraCli> {
       ),
     );
 
-    // Redirige al HomePage
+    // Redirige al cambiarInfoScreen
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
-          builder: (context) => cambiarInfoScreen(
-                idCli: widget.idCli,
-              )),
+        builder: (context) => cambiarInfoScreen(
+          idCli: widget.idCli,
+        ),
+      ),
       (route) => false,
     );
   }

@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 class ObrasService {
   ObrasService();
 
-  Future<List<Obra>> getObras(int idCli) async {
+  Future<List<ObraDetalle>> getObras(int idCli) async {
     final response = await http.get(
         Uri.parse('https://apismovilconstru.onrender.com/obrasCli/$idCli'));
 
@@ -13,8 +13,8 @@ class ObrasService {
 
       if (responseData.containsKey("obras") && responseData["obras"] is List) {
         List<dynamic> obrasData = responseData["obras"];
-        List<Obra> obras =
-            obrasData.map((obra) => Obra.fromJson(obra)).toList();
+        List<ObraDetalle> obras =
+            obrasData.map((obra) => ObraDetalle.fromJson(obra)).toList();
         return obras;
       } else {
         throw Exception(
@@ -43,31 +43,78 @@ class ObrasService {
   }
 }
 
-class Obra {
-  final String descripcion;
-  final String estado;
+class ObraDetalle {
+  final int idObra;
+  final String? descripcion;
   final String? fechaini;
-  final String? area;
-  final int? precio;
   final String? fechafin;
+  final String? estado;
+  final String? area;
+  final String? idCliente;
+  final String? idEmp;
+  final int? precio;
+  final List<Actividad> actividades;
 
-  Obra({
+  ObraDetalle({
+    required this.idObra,
     required this.descripcion,
+    required this.fechaini,
+    required this.fechafin,
     required this.estado,
     this.area,
-    this.fechaini,
+    required this.idCliente,
+    required this.idEmp,
     this.precio,
-    this.fechafin,
+    this.actividades = const [],
   });
 
-  factory Obra.fromJson(Map<String, dynamic> json) {
-    return Obra(
-      descripcion: json['descripcion'] ?? '',
-      fechaini: json['fechaini'] ?? '',
-      area: json['area'] ?? '',
-      precio: json['precio'] ?? 0,
-      estado: json['estado'] ?? '',
-      fechafin: json['fechafin'] ?? '',
+  factory ObraDetalle.fromJson(Map<String, dynamic> json) {
+    List<dynamic> detalleObraData = json['detalle_obra'] ?? [];
+    List<Actividad> actividades = detalleObraData
+        .map((actividad) =>
+            Actividad.fromJson(actividad as Map<String, dynamic>))
+        .toList();
+
+    return ObraDetalle(
+      idObra: json['idObra'],
+      descripcion: json['descripcion'],
+      fechaini: json['fechaini'],
+      fechafin: json['fechafin'],
+      estado: json['estado'],
+      area: json['area'],
+      idCliente: json['cliente']['nombre'] + " " + json['cliente']['apellidos'],
+      idEmp: json['empleado']['nombre'] + " " + json['empleado']['apellidos'],
+      precio: json['precio'],
+      actividades: actividades,
+    );
+  }
+}
+
+class Actividad {
+  final int? id;
+  final String? actividad;
+  final String? fechaini;
+  final int? fechafin;
+  final String? estado;
+  final int? idObra;
+
+  Actividad({
+    this.id,
+    this.actividad,
+    this.fechaini,
+    this.fechafin,
+    this.estado,
+    this.idObra,
+  });
+
+  factory Actividad.fromJson(Map<String, dynamic> json) {
+    return Actividad(
+      id: json['id'],
+      actividad: json['actividad'],
+      fechaini: json['fechaini'],
+      fechafin: json['fechafin'],
+      estado: json['estado'],
+      idObra: json['idObra'],
     );
   }
 }
