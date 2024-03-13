@@ -214,13 +214,12 @@ class _EmployeeFormState extends State<EmployeeForm> {
   }
 
   void _irACambiarInfo() {
-    Navigator.pushAndRemoveUntil(
+    Navigator.pop(
       context,
       MaterialPageRoute(
           builder: (context) => cambiarInfoScreen(
                 idEmp: widget.idEmp,
               )),
-      (route) => false,
     );
   }
 }

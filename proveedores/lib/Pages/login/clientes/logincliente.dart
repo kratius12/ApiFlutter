@@ -176,14 +176,14 @@ class _LoginScreenState extends State<ClienteLoginPage> {
   }
 
   void _irAListaObras(int? response) {
-    Navigator.push(
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
         builder: (context) => ObrasListScreen(
           idCli: response!,
           obrasService: ObrasService(),
-        ),
-      ),
+        ), 
+      ),(route)=>false
     );
   }
 

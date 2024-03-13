@@ -35,11 +35,11 @@ class _cambiarcontraEmpState extends State<cambiarcontraEmp> {
           IconButton(
             icon: const Icon(Icons.power_settings_new, color: Colors.white),
             onPressed: () {
-              Navigator.pushReplacement(
+              Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const HomePage(),
-                ),
+                ), (route)=>false
               );
             },
           ),
@@ -139,13 +139,13 @@ class _cambiarcontraEmpState extends State<cambiarcontraEmp> {
     );
 
     // Redirige al HomePage
-    Navigator.pushAndRemoveUntil(
+    Navigator.pop(
       context,
       MaterialPageRoute(
           builder: (context) => cambiarInfoScreen(
                 idEmp: widget.idEmp,
               )),
-      (route) => false,
+      // (route) => false,
     );
   }
 

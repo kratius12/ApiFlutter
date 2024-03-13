@@ -1,3 +1,4 @@
+import "package:construtech/main.dart";
 import "package:flutter/material.dart";
 import "package:construtech/Apis/clientes/login.dart";
 
@@ -29,6 +30,20 @@ class _cambiarcontracliState extends State<cambiarcontraCli> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Cambiar contraseña"),
+        actions: [
+                IconButton(
+                  icon:
+                      const Icon(Icons.power_settings_new, color: Colors.white),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ), (route)=> false
+                    );
+                  },
+                ),
+              ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

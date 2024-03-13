@@ -1,3 +1,4 @@
+import 'package:construtech/main.dart';
 import "package:flutter/material.dart";
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -58,6 +59,20 @@ class CambiarInfoFormState extends State<CambiarInfoForm> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Información personal'),
+          actions: [
+                IconButton(
+                  icon:
+                      const Icon(Icons.power_settings_new, color: Colors.white),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ), (route)=> false
+                    );
+                  },
+                ),
+              ],
         ),
         body: SingleChildScrollView(
           child: Padding(

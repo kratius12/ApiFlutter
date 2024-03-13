@@ -3,7 +3,6 @@ import "package:construtech/Apis/clientes/obra.dart";
 import "package:construtech/main.dart";
 import 'package:construtech/Pages/clientes/obras.dart';
 import 'package:intl/intl.dart';
-import "package:construtech/Pages/clientes/cambiarinformacion.dart";
 
 class SolicitarServicioForm extends StatefulWidget {
   final int idCli;
@@ -24,83 +23,24 @@ class _SolicitarServicioFormState extends State<SolicitarServicioForm> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Solicitar cita")),
-      drawer: Drawer(
+      appBar: AppBar(title: const Text("Solicitar cita", style: TextStyle(color: Colors.white),),
         backgroundColor: Colors.grey,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/LogoBlanco.png'))),
-              child: Text(""),
-            ),
-            ListTile(
-              title: const Text('Obras', style: TextStyle(color: Colors.white)),
-              onTap: () {
-                ObrasService obrasService = ObrasService();
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ObrasListScreen(
-                            idCli: widget.idCli,
-                            obrasService: obrasService,
-                          )),
-                  (route) => false,
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('Cambiar información de usuario',
-                  style: TextStyle(color: Colors.white)),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        cambiarInfoScreen(idCli: widget.idCli),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text(
-                'Solicitar cita',
-                style: TextStyle(color: Colors.white),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SolicitarServicioForm(
-                        idCli: widget.idCli,
-                      ),
-                    ));
-              },
-            ),
-            const SizedBox(
-              height: 440,
-            ),
-            ListTile(
-              title: const Text(
-                'Cerrar sesión',
-                style: TextStyle(
-                  color: Colors.white,
+        actions: [
+                IconButton(
+                  icon:
+                      const Icon(Icons.power_settings_new, color: Colors.white),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ), (route)=> false
+                    );
+                  },
                 ),
-              ),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HomePage(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+              ],
       ),
+      
       body: SingleChildScrollView(
         child: Container(
           margin: const EdgeInsets.only(left: 10, right: 10),

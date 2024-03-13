@@ -67,7 +67,6 @@ class ObrasService {
         return null;
       }
     } catch (e) {
-      print(e);
       return null;
     }
   }
@@ -80,7 +79,6 @@ class ObraDetalle {
   final String? fechafin;
   final String? estado;
   final String? area;
-  final String? createdAt;
   final String? idCliente;
   final String? idEmp;
   final int? precio;
@@ -88,14 +86,13 @@ class ObraDetalle {
 
   ObraDetalle({
     required this.idObra,
-    this.descripcion,
-    this.fechaini,
-    this.fechafin,
-    this.estado,
+    required this.descripcion,
+    required this.fechaini,
+    required this.fechafin,
+    required this.estado,
     this.area,
-    this.createdAt,
-    this.idCliente,
-    this.idEmp,
+    required this.idCliente,
+    required this.idEmp,
     this.precio,
     this.actividades = const [],
   });
@@ -114,7 +111,6 @@ class ObraDetalle {
       fechafin: json['fechafin'],
       estado: json['estado'],
       area: json['area'],
-      createdAt: json['createdAt'],
       idCliente: json['cliente']['nombre'] + " " + json['cliente']['apellidos'],
       idEmp: json['empleado']['nombre'] + " " + json['empleado']['apellidos'],
       precio: json['precio'],

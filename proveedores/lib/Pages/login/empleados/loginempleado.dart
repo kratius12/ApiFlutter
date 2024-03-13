@@ -160,10 +160,10 @@ class _LoginScreenState extends State<EmpleadoLoginPage> {
   }
 
   void _irACambiarContra() {
-    Navigator.pushAndRemoveUntil(
+    Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => const EnviarCodigoPageEmp(),
-        ), (route) => false);
+        ));
   }
 }

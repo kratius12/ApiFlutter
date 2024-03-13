@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:construtech/Apis/empleados/obra.dart';
 import 'package:construtech/Pages/empleados/actualizarestado.dart';
 import 'package:construtech/main.dart';
-import 'package:construtech/Pages/empleados/addactividad.dart';
 import "package:construtech/Pages/empleados/cambiarinformacion.dart";
 
 class ObrasListScreenEmp extends StatefulWidget {
@@ -49,6 +48,36 @@ class _ObrasListScreenState extends State<ObrasListScreenEmp> {
     });
   }
 
+  Widget _buildTableRow(String? title, String? content) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 150,
+            child: Text(
+              '$title:',
+              style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16), // Ajusta el tamaño de la letra aquí
+              textAlign: TextAlign.end,
+            ),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Text(
+              content!,
+              textAlign: TextAlign.start,
+              style: const TextStyle(
+                  fontSize: 16), // Ajusta el tamaño de la letra aquí
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,13 +90,14 @@ class _ObrasListScreenState extends State<ObrasListScreenEmp> {
               ),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.power_settings_new, color: Colors.white),
+                  icon:
+                      const Icon(Icons.power_settings_new, color: Colors.white),
                   onPressed: () {
-                    Navigator.pushReplacement(
+                    Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const HomePage(),
-                      ),
+                      ), (route)=> false
                     );
                   },
                 ),
@@ -146,9 +176,8 @@ class _ObrasListScreenState extends State<ObrasListScreenEmp> {
   }
 }
 
-
 class DetalleObraScreen extends StatelessWidget {
-  final ObraDetalle obra;
+  final ObraDetalle? obra;
   final int idEmp;
 
   const DetalleObraScreen({Key? key, required this.obra, required this.idEmp})
@@ -159,40 +188,77 @@ class DetalleObraScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
-        title: const Text('Detalle de la Obra', style: TextStyle(color: Colors.white),),
+        title: const Text(
+          'Detalle de la Obra',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: SingleChildScrollView(
         child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 10,),
-              Text('Descripción: ${obra.descripcion}'),
-              const SizedBox(height: 10,),
-              Text('Empleado encargado: ${obra.idEmp}'),
-              const SizedBox(height: 10,),
-              Text('Cliente: ${obra.idCliente}'),
-              const SizedBox(height: 10,),
-              Text('Fecha de inicio: ${obra.fechaini}'),
-              const SizedBox(height: 10,),
-              Text('Fecha de fin estimada: ${obra.fechafin}'),
-              const SizedBox(height: 10,),
-              Text('Area: ${obra.area}'),
-              const SizedBox(height: 10,),
-              Text('Estado: ${obra.estado}'),
-              const SizedBox(height: 10,),
-              
+              const SizedBox(
+                height: 10,
+              ),
+              _buildTableRow('Descripción', obra!.descripcion.toString()),
+              _buildTableRow('Empleado\nencargado', obra!.idEmp.toString()),
+              _buildTableRow('Cliente', obra!.idCliente.toString()),
+              _buildTableRow('Fecha de \ninicio', obra!.fechaini.toString()),
+              _buildTableRow('Estado', obra!.estado.toString()),
+              if (obra!.fechafin == null)
+                (const Text(""))
+              else
+                _buildTableRow(
+                    'Fecha fin\n estimada', obra!.fechafin.toString()),
+              if (obra!.area == null)
+                (const Text(""))
+              else
+                _buildTableRow('Area', obra!.area.toString()),
+              const SizedBox(
+                height: 10,
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 onPressed: () {
-                  late int id = obra.idObra;
-                  _mostrarActividades(context, obra, id);
+                  late int id = obra!.idObra;
+                  _mostrarActividades(context, obra!, id);
                 },
-                child: const Text('Ver Actividades', style: TextStyle(color: Colors.white),),
+                child: const Text(
+                  'Ver Actividades',
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildTableRow(String title, String content) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 150,
+            child: Text(
+              '$title:',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
+              textAlign: TextAlign.end,
+            ),
+          ),
+          const SizedBox(width: 20),
+          Expanded(
+            child: Text(
+              content,
+              textAlign: TextAlign.start,
+              style: const TextStyle(fontSize: 19),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -203,7 +269,8 @@ class DetalleObraScreen extends StatelessWidget {
       MaterialPageRoute(
         builder: (context) => ActividadesScreen(
           actividades: obra.actividades,
-          idEmp: idEmp, idObra: idObra,
+          idEmp: idEmp,
+          idObra: idObra,
         ),
       ),
     );
@@ -218,8 +285,8 @@ class ActividadesScreen extends StatelessWidget {
   const ActividadesScreen({
     Key? key,
     required this.actividades,
-    required this.idEmp, required this.idObra,
-    
+    required this.idEmp,
+    required this.idObra,
   }) : super(key: key);
 
   @override
@@ -256,15 +323,6 @@ class ActividadesScreen extends StatelessWidget {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-         Navigator.push(context, MaterialPageRoute(builder: (context)=>  AddActividadForm(idEmp: idEmp, idObra: idObra, )));
-        },
-        backgroundColor: Colors.blue,
-        child: const Icon(Icons.add, color: Colors.white),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
-

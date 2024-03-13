@@ -17,14 +17,14 @@ class DetalleActividadForm extends StatefulWidget {
 
 class _DetalleActividadFormState extends State<DetalleActividadForm> {
   late TextEditingController _estadoController;
-  String _selectedEstado = ''; // Variable para almacenar el estado seleccionado
+  String _selectedEstado = '';
 
   @override
   void initState() {
     super.initState();
     _estadoController = TextEditingController(text: widget.actividad.estado);
     _selectedEstado =
-        widget.actividad.estado ?? ''; // Establece el estado inicial
+        widget.actividad.estado ?? '';
   }
 
   @override
@@ -89,6 +89,21 @@ class _DetalleActividadFormState extends State<DetalleActividadForm> {
                   backgroundColor: Colors.blue,
                 ),
                 onPressed: () async {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const CircularProgressIndicator(),
+                            const SizedBox(height: 10),
+                            const Text("Guardando..."),
+                          ],
+                        ),
+                      );
+                    },
+                  );
                   String? response;
                   ObrasService obrasService = ObrasService();
                   response = await obrasService.updateActividad(
@@ -146,13 +161,15 @@ class _DetalleActividadFormState extends State<DetalleActividadForm> {
               onPressed: () {
                 ObrasService obrasService = ObrasService();
                 Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => ObrasListScreenEmp(
-                              idEmp: widget.idEmp,
-                              obrasService: obrasService,
-                            )),
-                    (route) => false);
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ObrasListScreenEmp(
+                      idEmp: widget.idEmp,
+                      obrasService: obrasService,
+                    ),
+                  ),
+                  (route) => false,
+                );
               },
               child: const Text('OK'),
             ),

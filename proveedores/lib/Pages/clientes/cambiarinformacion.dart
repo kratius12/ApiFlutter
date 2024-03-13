@@ -1,7 +1,6 @@
 import "package:flutter/material.dart";
 import "package:construtech/Pages/clientes/cambiarcontra.dart";
 import "package:construtech/Pages/clientes/informacion.dart";
-import "package:construtech/Pages/clientes/solicitarservicio.dart";
 import "package:construtech/main.dart";
 
 // ignore: camel_case_types
@@ -18,79 +17,29 @@ class _CambiarInfoScreen extends State<cambiarInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Cambiar Información"),
-      ),
-      drawer: Drawer(
         backgroundColor: Colors.grey,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/LogoBlanco.png'))),
-              child: Text(""),
-            ),
-            ListTile(
-              title: const Text('Obras', style: TextStyle(color: Colors.white)),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: const Text('Cambiar información de usuario',
-                  style: TextStyle(color: Colors.white)),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        cambiarInfoScreen(idCli: widget.idCli),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text(
-                'Solicitar cita',
-                style: TextStyle(color: Colors.white),
-              ),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SolicitarServicioForm(
-                        idCli: widget.idCli,
-                      ),
-                    ));
-              },
-            ),
-            const SizedBox(
-              height: 440,
-            ),
-            ListTile(
-              title: const Text(
-                'Cerrar sesión',
-                style: TextStyle(
-                  color: Colors.white,
+        title: const Text("Cambiar Información", style: TextStyle(color: Colors.white),),
+        actions: [
+                IconButton(
+                  icon:
+                      const Icon(Icons.power_settings_new, color: Colors.white),
+                  onPressed: () {
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ), (route)=> false
+                    );
+                  },
                 ),
-              ),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HomePage(),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
+              ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Image.asset("assets/Logo.PNG", height: 200),
+            const SizedBox(height: 15,),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -121,10 +70,10 @@ class _CambiarInfoScreen extends State<cambiarInfoScreen> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
+                backgroundColor: Colors.grey,
               ),
               child: const Text(
-                'Cambiar Información de Usuario',
+                'Cambiar Información perfil',
                 style: TextStyle(color: Colors.white),
               ),
             ),
