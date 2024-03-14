@@ -122,6 +122,7 @@ class AuthService {
   }
 
   Future<String?> updateUser(
+    
       int id,
       String nombre,
       String apellidos,
@@ -131,6 +132,7 @@ class AuthService {
       String email,
       String fechaNac,
       String telefono) async {
+        try{
     final response = await http.put(Uri.parse('$baseUrl/clienteMo/$id'), body: {
       "nombre": nombre,
       "apellidos": apellidos,
@@ -141,10 +143,15 @@ class AuthService {
       "fecha_nac": fechaNac,
       "telefono": telefono
     });
+    print(response.statusCode);
 
     if (response.statusCode == 200) {
       return "Cliente actualizado con exito";
     } else {
+      return null;
+    }
+    }
+    catch(e){
       return null;
     }
   }

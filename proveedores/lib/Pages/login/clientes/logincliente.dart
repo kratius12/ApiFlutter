@@ -18,7 +18,7 @@ class _LoginScreenState extends State<ClienteLoginPage> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final AuthService authService = AuthService();
-
+  bool isLoading = false;
   late Future<String?> loginFuture;
 
   String? validateRequired(String? value) {
@@ -69,36 +69,38 @@ class _LoginScreenState extends State<ClienteLoginPage> {
                 SizedBox(
                   width: 400,
                   child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          // Iniciar la transición de carga
-                          loginFuture = authService.loginUser(
-                            usernameController.text,
-                            passwordController.text,
-                          );
-                        });
-
-                        // Continuar con la lógica después de recibir la respuesta del API
-                        loginFuture.then((token) {
-                          if (token != null) {
-                            int? response =
-                                authService.getUserIdFromToken(token);
-                            _mostrarAlerta(
-                                'Login exitoso', 'Se ha logeado correctamente');
-                            _irAListaObras(response);
-                          } else {
-                            // Mostrar ventana de alerta en caso de credenciales inválidas
-                            _mostrarSnackbar('Credenciales incorrectas');
-                          }
-                        });
-                      }
-                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                     ),
+                    onPressed: isLoading
+                        ? null
+                        : () async {
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              String? token = await authService.loginUser(
+                                usernameController.text,
+                                passwordController.text,
+                              );
+
+                              setState(() {
+                                isLoading = false;
+                              });
+
+                              if (token != null) {
+                                int? response =
+                                    authService.getUserIdFromToken(token);
+                                _mostrarAlerta();
+                                _irAListaObras(response);
+                              } else {
+                                _mostrarAlertaNo();
+                              }
+                            }
+                          },
                     child: const Text(
-                      'Ingresar',
+                      "Ingresar",
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
@@ -121,20 +123,30 @@ class _LoginScreenState extends State<ClienteLoginPage> {
                           ),
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          _irACambiarContrasena();
-                        },
-                        child: const ListTile(
-                          title: Text(
-                            'Cambiar contraseña',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
+                      Center(
+                        child: GestureDetector(
+                          onTap: () {
+                            _irACambiarContrasena();
+                          },
+                          child: const ListTile(
+                            title: Text(
+                              'Cambiar contraseña',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                decoration: TextDecoration.underline,
+                              ),
                             ),
                           ),
                         ),
                       ),
+                      if (isLoading)
+                        const Center(
+                          child: CircularProgressIndicator(
+                            strokeWidth: 6,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.blue),
+                          ),
+                        )
                     ],
                   ),
                 ),
@@ -147,32 +159,66 @@ class _LoginScreenState extends State<ClienteLoginPage> {
   }
 
   // Función para mostrar un Snackbar
-  void _mostrarSnackbar(String mensaje) {
+  void _mostrarAlerta() {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(mensaje),
+        content: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              "Haz ingresado con exito!",
+              style: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
+            ),
+          ],
+        ),
+        duration: const Duration(milliseconds: 2000),
+        width: 300,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3.0),
+        ),
+        backgroundColor: const Color.fromARGB(255, 12, 195, 106),
       ),
     );
   }
 
-  void _mostrarAlerta(String titulo, String mensaje) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(titulo),
-          content: Text(mensaje),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Aceptar'),
-            ),
-          ],
-        );
-      },
-    );
+  void _mostrarAlertaNo() {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Icon(
+            Icons.cancel,
+            color: Colors.black,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            "Credenciales de ingreso incorrectas",
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+          ),
+        ],
+      ),
+      duration: const Duration(milliseconds: 2000),
+      width: 300,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(3.0),
+      ),
+      backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+    ));
   }
 
   void _irAListaObras(int? response) {
