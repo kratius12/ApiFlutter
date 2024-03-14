@@ -75,6 +75,9 @@ class ObraDetalle {
             Actividad.fromJson(actividad as Map<String, dynamic>))
         .toList();
 
+    final cliente = json['cliente'];
+    final empleado = json['empleado'];
+
     return ObraDetalle(
       idObra: json['idObra'],
       descripcion: json['descripcion'],
@@ -82,8 +85,12 @@ class ObraDetalle {
       fechafin: json['fechafin'],
       estado: json['estado'],
       area: json['area'],
-      idCliente: json['cliente']['nombre'] + " " + json['cliente']['apellidos'],
-      idEmp: json['empleado']['nombre'] + " " + json['empleado']['apellidos'],
+      idCliente: cliente != null
+          ? cliente['nombre'] + " " + cliente['apellidos']
+          : null,
+      idEmp: empleado != null
+          ? empleado['nombre'] + " " + empleado['apellidos']
+          : null,
       precio: json['precio'],
       actividades: actividades,
     );

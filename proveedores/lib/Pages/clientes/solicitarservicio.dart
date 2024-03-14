@@ -180,7 +180,7 @@ class _SolicitarServicioFormState extends State<SolicitarServicioForm> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => ObrasListScreen(
+        builder: (context) => ObrasListScreenCli(
           idCli: idCli,
           obrasService: ObrasService(),
         ),

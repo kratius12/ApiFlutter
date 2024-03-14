@@ -1,18 +1,18 @@
-import "package:construtech/main.dart";
+import "package:construtech/Pages/clientes/cambiarinformacion.dart";
 import "package:flutter/material.dart";
 import "package:construtech/Apis/clientes/login.dart";
+import "package:construtech/main.dart";
 
-import "package:construtech/Pages/clientes/cambiarinformacion.dart";
-
-class cambiarcontraCli extends StatefulWidget {
+class CambiarContraCli extends StatefulWidget {
   final int idCli;
-  const cambiarcontraCli({Key? key, required this.idCli}) : super(key: key);
+  const CambiarContraCli({Key? key, required this.idCli}) : super(key: key);
 
   @override
-  _cambiarcontracliState createState() => _cambiarcontracliState();
+  // ignore: library_private_types_in_public_api
+  _CambiarContraCliState createState() => _CambiarContraCliState();
 }
 
-class _cambiarcontracliState extends State<cambiarcontraCli> {
+class _CambiarContraCliState extends State<CambiarContraCli> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _contrasenaController = TextEditingController();
   final TextEditingController _confirmarController = TextEditingController();
@@ -27,17 +27,20 @@ class _cambiarcontracliState extends State<cambiarcontraCli> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
-        title: const Text("Cambiar contraseña", style: TextStyle(color: Colors.white),),
+        title: const Text(
+          "Cambiar contraseña",
+          style: TextStyle(color: Colors.white),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.power_settings_new, color: Colors.white),
             onPressed: () {
               Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const HomePage(),
-                ), (route) => false
-              );
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomePage(),
+                  ),
+                  (route) => false);
             },
           ),
         ],
@@ -64,8 +67,7 @@ class _cambiarcontracliState extends State<cambiarcontraCli> {
                     return "La contraseña debe tener al menos una letra mayúscula";
                   } else if (!RegExp(r'[a-z]').hasMatch(value)) {
                     return "La contraseña debe tener al menos una letra minúscula";
-                  } else if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]')
-                      .hasMatch(value)) {
+                  } else if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
                     return "La contraseña debe tener al menos un carácter especial";
                   } else {
                     return null;
@@ -116,7 +118,7 @@ class _cambiarcontracliState extends State<cambiarcontraCli> {
                     // Realiza la solicitud y espera la respuesta
                     String? response = await _changePassword();
 
-                    // Cierra el indicador de carga
+                    // ignore: use_build_context_synchronously
                     Navigator.of(context).pop();
 
                     // Muestra el mensaje y redirige según la respuesta

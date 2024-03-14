@@ -14,11 +14,19 @@ class _EnviarCodigoPageState extends State<EnviarCodigoPageEmp> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
 
+  Future<String?> _enviarCodigo() async {
+    return AuthService().enviarCodigo(_emailController.text);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Enviar Código de Verificación'),
+        backgroundColor: Colors.grey,
+        title: const Text(
+          'Enviar Código de Verificación',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -45,16 +53,27 @@ class _EnviarCodigoPageState extends State<EnviarCodigoPageEmp> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 onPressed: () async {
-                  String? resultado =
-                      await AuthService().enviarCodigo(_emailController.text);
                   if (_formKey.currentState!.validate()) {
-                    String mensaje = "";
+                    // Mostrar la carga mientras se espera la respuesta del API
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (BuildContext context) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      },
+                    );
+                    // Esperar la respuesta del API
+                    String? resultado = await _enviarCodigo();
+                    // ignore: use_build_context_synchronously
+                    Navigator.pop(context); // Cerrar el diálogo de carga
+
                     if (resultado != null) {
-                      mensaje = "Código enviado exitosamente.";
-                      _mostrarMensajeOk('Info', mensaje, _emailController.text);
+                      _irAVerificarCodigo(_emailController.text);
+                      _mostrarMensajeOk();
                     } else {
-                      mensaje = "No se pudo enviar el código de verificación.";
-                      _mostrarMensaje('Error', mensaje);
+                      _mostrarMensajeNo();
                     }
                   }
                 },
@@ -74,46 +93,74 @@ class _EnviarCodigoPageState extends State<EnviarCodigoPageEmp> {
     return RegExp(r'^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)+$').hasMatch(email);
   }
 
-  void _mostrarMensaje(String titulo, String mensaje) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(titulo),
-          content: Text(mensaje),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Aceptar'),
+  void _mostrarMensajeOk() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              "Codigo enviado correctamente!",
+              style: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
             ),
           ],
-        );
-      },
+        ),
+        duration: const Duration(milliseconds: 2000),
+        width: 300,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3.0),
+        ),
+        backgroundColor: const Color.fromARGB(255, 12, 195, 106),
+      ),
     );
   }
 
-  void _mostrarMensajeOk(String titulo, String mensaje, String email) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(titulo),
-          content: Text(mensaje),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => EnviarCodigoFormEmpleado(
-                          email: email,
-                        )));
-              },
-              child: const Text('Aceptar'),
-            ),
-          ],
-        );
-      },
-    );
+  void _mostrarMensajeNo() {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Icon(
+            Icons.cancel,
+            color: Colors.black,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            "El codigo no pudo ser enviado",
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+          ),
+        ],
+      ),
+      duration: const Duration(milliseconds: 2000),
+      width: 300,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(3.0),
+      ),
+      backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+    ));
+  }
+
+  void _irAVerificarCodigo(String email) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => EnviarCodigoFormEmpleado(
+                  email: email,
+                )));
   }
 }

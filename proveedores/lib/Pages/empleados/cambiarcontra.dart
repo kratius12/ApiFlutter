@@ -1,8 +1,7 @@
-import "package:construtech/main.dart";
-import "package:flutter/material.dart";
-import "package:construtech/Apis/empleados/login.dart";
-
-import "package:construtech/Pages/empleados/cambiarinformacion.dart";
+import 'package:construtech/main.dart';
+import 'package:flutter/material.dart';
+import 'package:construtech/Apis/empleados/login.dart';
+import 'package:construtech/Pages/empleados/cambiarinformacion.dart';
 
 // ignore: camel_case_types
 class cambiarcontraEmp extends StatefulWidget {
@@ -28,19 +27,20 @@ class _cambiarcontraEmpState extends State<cambiarcontraEmp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: Colors.grey,
-        title: const Text("Cambiar contraseña", style: TextStyle(color:Colors.white)),
+        title: const Text("Cambiar contraseña",
+            style: TextStyle(color: Colors.white)),
         actions: [
           IconButton(
             icon: const Icon(Icons.power_settings_new, color: Colors.white),
             onPressed: () {
               Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const HomePage(),
-                ), (route)=>false
-              );
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomePage(),
+                  ),
+                  (route) => false);
             },
           ),
         ],
@@ -61,8 +61,18 @@ class _cambiarcontraEmpState extends State<cambiarcontraEmp> {
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Por favor ingrese su contraseña nueva";
+                  } else if (value.length < 8) {
+                    return "La contraseña debe tener al menos 8 caracteres";
+                  } else if (!RegExp(r'[A-Z]').hasMatch(value)) {
+                    return "La contraseña debe tener al menos una letra mayúscula";
+                  } else if (!RegExp(r'[a-z]').hasMatch(value)) {
+                    return "La contraseña debe tener al menos una letra minúscula";
+                  } else if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]')
+                      .hasMatch(value)) {
+                    return "La contraseña debe tener al menos un carácter especial";
+                  } else {
+                    return null;
                   }
-                  return null;
                 },
               ),
               TextFormField(
@@ -74,11 +84,11 @@ class _cambiarcontraEmpState extends State<cambiarcontraEmp> {
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Por favor confirme su contraseña nueva";
-                  }
-                  if (value != _contrasenaController.text) {
+                  } else if (value != _contrasenaController.text) {
                     return "La confirmación debe coincidir con la contraseña";
+                  } else {
+                    return null;
                   }
-                  return null;
                 },
               ),
               const SizedBox(
@@ -87,35 +97,70 @@ class _cambiarcontraEmpState extends State<cambiarcontraEmp> {
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 onPressed: () async {
-                  // Muestra el indicador de carga durante la solicitud
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const AlertDialog(
-                        content: Row(
-                          children: [
-                            CircularProgressIndicator(),
-                            SizedBox(width: 16.0),
-                            Text("Cambiando contraseña..."),
-                          ],
+                  // Validar el formulario
+                  if (_formKey.currentState!.validate()) {
+                    // Muestra el indicador de carga durante la solicitud
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const AlertDialog(
+                          content: Row(
+                            children: [
+                              CircularProgressIndicator(),
+                              SizedBox(width: 16.0),
+                              Text("Cambiando contraseña..."),
+                            ],
+                          ),
+                        );
+                      },
+                      barrierDismissible: false,
+                    );
+
+                    // Realiza la solicitud y espera la respuesta
+                    String? response = await _changePassword();
+
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context).pop();
+
+                    // Muestra el mensaje y redirige según la respuesta
+                    if (response != null) {
+                      _irACambiarInfoScreen();
+                      // ignore: use_build_context_synchronously
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: <Widget>[
+                              Icon(
+                                Icons.check_circle,
+                                color: Colors.white,
+                              ),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text(
+                                "Contraseña actualizada con exito!",
+                                style: TextStyle(
+                                  color: Color.fromARGB(255, 255, 255, 255),
+                                ),
+                              ),
+                            ],
+                          ),
+                          duration: const Duration(milliseconds: 2000),
+                          width: 300,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8.0, vertical: 10),
+                          behavior: SnackBarBehavior.floating,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(3.0),
+                          ),
+                          backgroundColor:
+                              const Color.fromARGB(255, 12, 195, 106),
                         ),
                       );
-                    },
-                    barrierDismissible: false,
-                  );
-
-                  // Realiza la solicitud y espera la respuesta
-                  String? response = await _changePassword();
-
-                  // Cierra el indicador de carga
-                  // ignore: use_build_context_synchronously
-                  Navigator.of(context).pop();
-
-                  // Muestra el mensaje y redirige según la respuesta
-                  if (response != null) {
-                    _mostrarMensajeSi();
-                  } else {
-                    _mostrarMensajeNo();
+                    } else {
+                      _mostrarMensajeNo();
+                    }
                   }
                 },
                 child: const Text(
@@ -130,31 +175,43 @@ class _cambiarcontraEmpState extends State<cambiarcontraEmp> {
     );
   }
 
-  void _mostrarMensajeSi() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Contraseña cambiada con éxito'),
-        duration: Duration(seconds: 2),
-      ),
-    );
-
-    // Redirige al HomePage
+  void _irACambiarInfoScreen() {
     Navigator.pop(
       context,
       MaterialPageRoute(
-          builder: (context) => cambiarInfoScreen(
-                idEmp: widget.idEmp,
-              )),
-      // (route) => false,
+        builder: (context) => cambiarInfoScreen(
+          idEmp: widget.idEmp,
+        ),
+      ),
     );
   }
 
   void _mostrarMensajeNo() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('No se pudo cambiar la contraseña'),
-        duration: Duration(seconds: 2),
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Icon(
+            Icons.cancel,
+            color: Colors.black,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            "No se ha podido actualizar la contraseña",
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+          ),
+        ],
       ),
-    );
+      duration: const Duration(milliseconds: 2000),
+      width: 300,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(3.0),
+      ),
+      backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+    ));
   }
 }

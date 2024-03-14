@@ -177,14 +177,14 @@ class _LoginScreenState extends State<ClienteLoginPage> {
 
   void _irAListaObras(int? response) {
     Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ObrasListScreen(
-          idCli: response!,
-          obrasService: ObrasService(),
-        ), 
-      ),(route)=>false
-    );
+        context,
+        MaterialPageRoute(
+          builder: (context) => ObrasListScreenCli(
+            idCli: response!,
+            obrasService: ObrasService(),
+          ),
+        ),
+        (route) => false);
   }
 
   void _irAFormularioPersonalizado() {

@@ -48,6 +48,7 @@ class _ObrasListScreenState extends State<ObrasListScreenEmp> {
     });
   }
 
+  // ignore: unused_element
   Widget _buildTableRow(String? title, String? content) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -94,11 +95,11 @@ class _ObrasListScreenState extends State<ObrasListScreenEmp> {
                       const Icon(Icons.power_settings_new, color: Colors.white),
                   onPressed: () {
                     Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(),
-                      ), (route)=> false
-                    );
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomePage(),
+                        ),
+                        (route) => false);
                   },
                 ),
               ],
@@ -218,17 +219,18 @@ class DetalleObraScreen extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                onPressed: () {
-                  late int id = obra!.idObra;
-                  _mostrarActividades(context, obra!, id);
-                },
-                child: const Text(
-                  'Ver Actividades',
-                  style: TextStyle(color: Colors.white),
+              if (obra!.actividades.isNotEmpty)
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+                  onPressed: () {
+                    late int id = obra!.idObra;
+                    _mostrarActividades(context, obra!, id);
+                  },
+                  child: const Text(
+                    'Ver Actividades',
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-              ),
             ],
           ),
         ),

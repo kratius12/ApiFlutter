@@ -23,8 +23,7 @@ class _DetalleActividadFormState extends State<DetalleActividadForm> {
   void initState() {
     super.initState();
     _estadoController = TextEditingController(text: widget.actividad.estado);
-    _selectedEstado =
-        widget.actividad.estado ?? '';
+    _selectedEstado = widget.actividad.estado ?? '';
   }
 
   @override
@@ -82,47 +81,46 @@ class _DetalleActividadFormState extends State<DetalleActividadForm> {
               }).toList(),
             ),
             const SizedBox(height: 15),
-
             Center(
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                ),
-                onPressed: () async {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const CircularProgressIndicator(),
-                            const SizedBox(height: 10),
-                            const Text("Guardando..."),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                  String? response;
-                  ObrasService obrasService = ObrasService();
-                  response = await obrasService.updateActividad(
-                    widget.actividad.id as int,
-                    _selectedEstado,
-                  );
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                  ),
+                  onPressed: () async {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const AlertDialog(
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CircularProgressIndicator(),
+                              SizedBox(height: 10),
+                              Text("Guardando..."),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                    String? response;
+                    ObrasService obrasService = ObrasService();
+                    response = await obrasService.updateActividad(
+                      widget.actividad.id as int,
+                      _selectedEstado,
+                    );
 
-                  if (response == "OK") {
-                    _mostrarAlertaSI();
-                  } else {
-                    _mostrarAlertaNO();
-                  }
-                },
-                child: const Text(
-                  "Guardar",
-                  style: TextStyle(color: Colors.white),
-                )),
+                    if (response == "OK") {
+                      _irAListarObras();
+                      _mostrarAlertaSI();
+                    } else {
+                      _mostrarAlertaNO();
+                    }
+                  },
+                  child: const Text(
+                    "Guardar",
+                    style: TextStyle(color: Colors.white),
+                  )),
             )
-            
           ],
         ),
       ),
@@ -150,32 +148,47 @@ class _DetalleActividadFormState extends State<DetalleActividadForm> {
   }
 
   void _mostrarAlertaSI() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Éxito'),
-          content: const Text('Se editó la actividad correctamente'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                ObrasService obrasService = ObrasService();
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ObrasListScreenEmp(
-                      idEmp: widget.idEmp,
-                      obrasService: obrasService,
-                    ),
-                  ),
-                  (route) => false,
-                );
-              },
-              child: const Text('OK'),
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              "Actividad actualizada con exito!",
+              style: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
             ),
           ],
-        );
-      },
+        ),
+        duration: const Duration(milliseconds: 2000),
+        width: 300,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3.0),
+        ),
+        backgroundColor: const Color.fromARGB(255, 12, 195, 106),
+      ),
     );
+  }
+
+  void _irAListarObras() {
+    ObrasService obrasService = ObrasService();
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ObrasListScreenEmp(
+                  idEmp: widget.idEmp,
+                  obrasService: obrasService,
+                )),
+        (route) => false);
   }
 }

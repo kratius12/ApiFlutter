@@ -18,34 +18,38 @@ class _CambiarInfoScreen extends State<cambiarInfoScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
-        title: const Text("Cambiar Información", style: TextStyle(color: Colors.white),),
+        title: const Text(
+          "Cambiar Información",
+          style: TextStyle(color: Colors.white),
+        ),
         actions: [
-                IconButton(
-                  icon:
-                      const Icon(Icons.power_settings_new, color: Colors.white),
-                  onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(),
-                      ), (route)=> false
-                    );
-                  },
-                ),
-              ],
+          IconButton(
+            icon: const Icon(Icons.power_settings_new, color: Colors.white),
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomePage(),
+                  ),
+                  (route) => false);
+            },
+          ),
+        ],
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset("assets/Logo.PNG", height: 200),
-            const SizedBox(height: 15,),
+            const SizedBox(
+              height: 15,
+            ),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => cambiarcontraCli(
+                      builder: (context) => CambiarContraCli(
                             idCli: widget.idCli,
                           )),
                 );
