@@ -4,7 +4,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import "package:construtech/Apis/clientes/login.dart";
-import "package:construtech/Pages/clientes/cambiarinformacion.dart";
 
 class CambiarInfoForm extends StatefulWidget {
   final int idCli;
@@ -23,7 +22,8 @@ class CambiarInfoFormState extends State<CambiarInfoForm> {
   TextEditingController emailController = TextEditingController();
   TextEditingController fechaNacController = TextEditingController();
   TextEditingController telefonoController = TextEditingController();
-  late bool isLoading;
+  late bool isLoading = false; // Inicializar isLoading como false
+
   @override
   void initState() {
     super.initState();
@@ -79,12 +79,19 @@ class CambiarInfoFormState extends State<CambiarInfoForm> {
           ),
         ],
       ),
-      body: isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : formulario(),
+      body: Stack(
+        children: [
+          formulario(),
+          if (isLoading) // Mostrar el indicador de carga si isLoading es true
+            const Center(
+              child: CircularProgressIndicator(),
+            ),
+        ],
+      ),
     );
   }
 
+  List<String> dropdownItems = ['CC', 'CE', 'PS'];
   Widget formulario() {
     return SingleChildScrollView(
       child: Padding(
@@ -102,14 +109,16 @@ class CambiarInfoFormState extends State<CambiarInfoForm> {
                 decoration: const InputDecoration(labelText: 'Apellidos'),
               ),
               DropdownButtonFormField<String>(
-                value: tipoDocController.text,
+                value: dropdownItems.contains(tipoDocController.text)
+                    ? tipoDocController.text
+                    : dropdownItems.first,
                 onChanged: (newValue) {
                   setState(() {
                     tipoDocController.text = newValue!;
                   });
                 },
-                items: <String>['CC', 'CE', 'PS']
-                    .map<DropdownMenuItem<String>>((String value) {
+                items:
+                    dropdownItems.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(value),
@@ -163,6 +172,10 @@ class CambiarInfoFormState extends State<CambiarInfoForm> {
                   backgroundColor: Colors.blue,
                 ),
                 onPressed: () async {
+                  setState(() {
+                    isLoading =
+                        true; // Mostrar indicador de carga al presionar el botón
+                  });
                   AuthService authService = AuthService();
                   String? response = await authService.updateUser(
                       widget.idCli,
@@ -174,10 +187,13 @@ class CambiarInfoFormState extends State<CambiarInfoForm> {
                       emailController.text,
                       fechaNacController.text,
                       telefonoController.text);
-                    print(response);
+                  setState(() {
+                    isLoading =
+                        false; // Ocultar indicador de carga después de obtener la respuesta del servidor
+                  });
                   if (response != null) {
                     // ignore: use_build_context_synchronously
-                    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> cambiarInfoScreen(idCli: widget.idCli,)), (route) => false);
+                    Navigator.pop(context);
                     _mostrarMensajeSi();
                   } else {
                     // ignore: use_build_context_synchronously
@@ -237,7 +253,7 @@ class CambiarInfoFormState extends State<CambiarInfoForm> {
               width: 5,
             ),
             Text(
-              "Usuario actualizado con exito!",
+              "Usuario actualizado con éxito!",
               style: TextStyle(
                 color: Color.fromARGB(255, 255, 255, 255),
               ),
@@ -253,8 +269,6 @@ class CambiarInfoFormState extends State<CambiarInfoForm> {
         ),
         backgroundColor: const Color.fromARGB(255, 12, 195, 106),
       ),
-      
     );
-   
   }
 }
