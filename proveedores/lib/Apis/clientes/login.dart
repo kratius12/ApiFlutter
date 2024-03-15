@@ -143,7 +143,6 @@ class AuthService {
       "fecha_nac": fechaNac,
       "telefono": telefono
     });
-    print(response.statusCode);
 
     if (response.statusCode == 200) {
       return "Cliente actualizado con exito";

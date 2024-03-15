@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:construtech/Apis/empleados/login.dart';
 import 'package:construtech/Pages/login/empleados/loginempleado.dart';
 
+// ignore: camel_case_types
 class cambiarcontraemp extends StatefulWidget {
   final String email;
   const cambiarcontraemp({Key? key, required this.email}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _cambiarcontraempState createState() => _cambiarcontraempState();
 }
 
+// ignore: camel_case_types
 class _cambiarcontraempState extends State<cambiarcontraemp> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _contrasenaController = TextEditingController();

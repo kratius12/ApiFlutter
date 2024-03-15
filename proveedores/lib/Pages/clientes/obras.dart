@@ -16,6 +16,7 @@ class ObrasListScreenCli extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _ObrasListScreenState createState() => _ObrasListScreenState();
 }
 
@@ -48,37 +49,6 @@ class _ObrasListScreenState extends State<ObrasListScreenCli> {
     });
   }
 
-  Widget _buildTableRow(String? title, String? content) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 150,
-            child: Text(
-              '$title:',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-              textAlign: TextAlign.end,
-            ),
-          ),
-          const SizedBox(width: 20),
-          Expanded(
-            child: Text(
-              content!,
-              textAlign: TextAlign.start,
-              style: const TextStyle(
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -10,6 +10,7 @@ class SolicitarServicioForm extends StatefulWidget {
       : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _SolicitarServicioFormState createState() => _SolicitarServicioFormState();
 }
 
@@ -135,6 +136,7 @@ class _SolicitarServicioFormState extends State<SolicitarServicioForm> {
 
                                   if (result == "ok") {
                                     _irAListaObras(widget.idCli);
+                                    // ignore: use_build_context_synchronously
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: const Row(
@@ -193,7 +195,7 @@ class _SolicitarServicioFormState extends State<SolicitarServicioForm> {
             Container(
               color: Colors.black
                   .withOpacity(0.5), // Opacidad para oscurecer el fondo
-              child: Center(
+              child: const Center(
                 child: CircularProgressIndicator(),
               ),
             ),
