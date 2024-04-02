@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:construtech/Apis/clientes/login.dart';
 import 'package:construtech/main.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -45,9 +46,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
     if (value.length < 3 || value.length > 50) {
       return 'Los apellidos deben tener entre 3 y 50 caracteres';
     }
-    if (!RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ]+$').hasMatch(value)) {
+    if (!RegExp(r'^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ ]+$').hasMatch(value)) {
       return 'Los apellidos no pueden contener caracteres especiales ni números';
     }
+
     return null;
   }
 
@@ -110,11 +112,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return null;
   }
 
+  List<String> dropdownItems = [
+    'Cedula de ciudadania',
+    'Cedula de extranjeria',
+    'Pasaporte'
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Registro'),
+        backgroundColor: Colors.grey,
+        title: const Text(
+          'Registrarse',
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -143,16 +155,25 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   decoration: const InputDecoration(labelText: 'Telefono'),
                   validator: _validatePhoneNumber,
                 ),
-                TextFormField(
-                  controller: _tipoDocController,
-                  decoration:
-                      const InputDecoration(labelText: 'Tipo documento'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Por favor ingrese un tipo de documento';
-                    }
-                    return null;
+                DropdownButtonFormField<String>(
+                  value: dropdownItems.contains(_tipoDocController.text)
+                      ? _tipoDocController.text
+                      : dropdownItems.first,
+                  onChanged: (newValue) {
+                    setState(() {
+                      _tipoDocController.text = newValue!;
+                    });
                   },
+                  items: dropdownItems
+                      .map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList(),
+                  decoration: const InputDecoration(
+                    labelText: 'Tipo de Documento',
+                  ),
                 ),
                 TextFormField(
                   controller: _cedulaController,
@@ -197,12 +218,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 TextFormField(
                   controller: _emailController,
                   decoration: const InputDecoration(labelText: 'Email'),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Por favor ingrese su correo electronico';
-                    }
-                    return null;
-                  },
+                  validator: _validateEmail,
                 ),
                 TextFormField(
                   controller: _passwordController,
@@ -235,21 +251,150 @@ class _RegistrationPageState extends State<RegistrationPage> {
                             const SnackBar(
                                 content: Text("El correo ya existe")));
                       } else {
-                        String? response = await authService.register(
-                          _nombreController.text,
-                          _apellidosController.text,
-                          _emailController.text,
-                          _direccionController.text,
-                          _telefonoController.text,
-                          _tipoDocController.text,
-                          _cedulaController.text,
-                          _fechaNacController.text,
-                          _passwordController.text,
-                        );
-                        if (response != null) {
-                          _mostrarMensajeSi('Registro exitoso');
+                        Object? emailExists =
+                            await _checkEmailExists(_emailController.text);
+                        Object? docExists = await _checkDocExists(
+                            _cedulaController.text, _tipoDocController.text);
+                        if (emailExists != null) {
+                          // ignore: use_build_context_synchronously
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: const Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.cancel,
+                                  color: Colors.black,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "El email ingresado ya está asociado a \notro usuario",
+                                  style: TextStyle(
+                                      color:
+                                          Color.fromARGB(255, 255, 255, 255)),
+                                ),
+                              ],
+                            ),
+                            duration: const Duration(milliseconds: 2000),
+                            width: 300,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 10),
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(3.0),
+                            ),
+                            backgroundColor:
+                                const Color.fromARGB(255, 255, 0, 0),
+                          ));
+                        } else if (docExists != null) {
+                          // ignore: use_build_context_synchronously
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: const Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                Icon(
+                                  Icons.cancel,
+                                  color: Colors.black,
+                                ),
+                                SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  "El número y tipo de documento ya \nestán asociados a otro usuario",
+                                  style: TextStyle(
+                                      color:
+                                          Color.fromARGB(255, 255, 255, 255)),
+                                ),
+                              ],
+                            ),
+                            duration: const Duration(milliseconds: 2000),
+                            width: 300,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 10),
+                            behavior: SnackBarBehavior.floating,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(3.0),
+                            ),
+                            backgroundColor:
+                                const Color.fromARGB(255, 255, 0, 0),
+                          ));
                         } else {
-                          _mostrarMensajeNo('No se pudo registrar el cliente');
+                          String? response = await authService.register(
+                            _nombreController.text,
+                            _apellidosController.text,
+                            _emailController.text,
+                            _direccionController.text,
+                            _telefonoController.text,
+                            _tipoDocController.text,
+                            _cedulaController.text,
+                            _fechaNacController.text,
+                            _passwordController.text,
+                          );
+                          if (response != null) {
+                            // ignore: use_build_context_synchronously
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: const Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.check_circle,
+                                    color: Colors.white,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    "Te haz registrado con exito!",
+                                    style: TextStyle(
+                                      color: Color.fromARGB(255, 255, 255, 255),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              duration: const Duration(milliseconds: 2000),
+                              width: 300,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 10),
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3.0),
+                              ),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 12, 195, 106),
+                            ));
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: const Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget>[
+                                  Icon(
+                                    Icons.cancel,
+                                    color: Colors.black,
+                                  ),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    "Error al registrar el usuario",
+                                    style: TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 255, 255, 255)),
+                                  ),
+                                ],
+                              ),
+                              duration: const Duration(milliseconds: 2000),
+                              width: 300,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 10),
+                              behavior: SnackBarBehavior.floating,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3.0),
+                              ),
+                              backgroundColor:
+                                  const Color.fromARGB(255, 255, 0, 0),
+                            ));
+                          }
                         }
                       }
                     }
@@ -265,6 +410,40 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ),
       ),
     );
+  }
+
+  Future<Object?> _checkEmailExists(String email) async {
+    // Llamar a la API para verificar si el correo electrónico ya existe
+    final response = await http.get(Uri.parse(
+        'https://apismovilconstru-production-be9a.up.railway.app/checkEmail/$email/0'));
+    if (response.statusCode == 200) {
+      return null;
+    } else {
+      // ignore: use_build_context_synchronously
+      return "nada";
+    }
+  }
+
+  Future<Object?> _checkDocExists(String cedula, String tipoDoc) async {
+    // Llamar a la API para verificar si el tipo de documento y la cédula ya están registrados
+    final response = await http.get(Uri.parse(
+        'https://apismovilconstru-production-be9a.up.railway.app/checkDoc/$cedula/$tipoDoc/null'));
+    if (response.statusCode == 200) {
+      return null;
+    } else {
+      // ignore: use_build_context_synchronously
+      return "nada";
+    }
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Por favor, ingrese un correo electrónico';
+    }
+    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+      return 'Por favor, ingrese un correo electrónico válido';
+    }
+    return null;
   }
 
   void _mostrarMensajeSi(String mensaje) {

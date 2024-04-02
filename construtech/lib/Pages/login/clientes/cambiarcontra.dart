@@ -23,7 +23,11 @@ class _cambiarcontraCliState extends State<cambiarcontraCli> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Cambiar contraseña"),
+        backgroundColor: Colors.grey,
+        title: const Text(
+          "Cambiar contraseña",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -41,8 +45,18 @@ class _cambiarcontraCliState extends State<cambiarcontraCli> {
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Por favor ingrese su contraseña nueva";
+                  } else if (value.length < 8) {
+                    return "La contraseña debe tener al menos 8 caracteres";
+                  } else if (!RegExp(r'[A-Z]').hasMatch(value)) {
+                    return "La contraseña debe tener al menos una letra mayúscula";
+                  } else if (!RegExp(r'[a-z]').hasMatch(value)) {
+                    return "La contraseña debe tener al menos una letra minúscula";
+                  } else if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]')
+                      .hasMatch(value)) {
+                    return "La contraseña debe tener al menos un carácter especial";
+                  } else {
+                    return null;
                   }
-                  return null;
                 },
               ),
               TextFormField(
@@ -54,11 +68,11 @@ class _cambiarcontraCliState extends State<cambiarcontraCli> {
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Por favor confirme su contraseña nueva";
-                  }
-                  if (value != _contrasenaController.text) {
+                  } else if (value != _contrasenaController.text) {
                     return "La confirmación debe coincidir con la contraseña";
+                  } else {
+                    return null;
                   }
-                  return null;
                 },
               ),
               const SizedBox(
@@ -68,35 +82,38 @@ class _cambiarcontraCliState extends State<cambiarcontraCli> {
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 onPressed: () async {
                   // Muestra el indicador de carga durante la solicitud
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return const AlertDialog(
-                        content: Row(
-                          children: [
-                            CircularProgressIndicator(),
-                            SizedBox(width: 16.0),
-                            Text("Cambiando contraseña..."),
-                          ],
+
+                  if (_formKey.currentState!.validate()) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const AlertDialog(
+                          content: Row(
+                            children: [
+                              CircularProgressIndicator(),
+                              SizedBox(width: 16.0),
+                              Text("Cambiando contraseña..."),
+                            ],
+                          ),
+                        );
+                      },
+                      barrierDismissible: false,
+                    );
+                    AuthService authService = AuthService();
+                    int? response = await authService.changePass(
+                        _contrasenaController.text, widget.email);
+                    if (response == 2) {
+                      // ignore: use_build_context_synchronously
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomePage(),
                         ),
                       );
-                    },
-                    barrierDismissible: false,
-                  );
-                  AuthService authService = AuthService();
-                  int? response = await authService.changePass(
-                      _contrasenaController.text, widget.email);
-                  if (response == 2) {
-                    // ignore: use_build_context_synchronously
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(),
-                      ),
-                    );
+                    }
+                    _mostrarMensajeSi(
+                        "Info", "Redireccionando a la pagina principal");
                   }
-                  _mostrarMensajeSi(
-                      "Info", "Redireccionando a la pagina principal");
 
                   // ignore: use_build_context_synchronously
                 },
@@ -113,25 +130,35 @@ class _cambiarcontraCliState extends State<cambiarcontraCli> {
   }
 
   void _mostrarMensajeSi(String titulo, String mensaje) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(titulo),
-          content: Text(mensaje),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                    (route) => false);
-              },
-              child: const Text('Aceptar'),
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              "Contraseña cambiada correctamente!",
+              style: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
             ),
           ],
-        );
-      },
+        ),
+        duration: const Duration(milliseconds: 2000),
+        width: 300,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3.0),
+        ),
+        backgroundColor: const Color.fromARGB(255, 12, 195, 106),
+      ),
     );
   }
 }

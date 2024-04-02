@@ -71,7 +71,36 @@ class _EnviarCodigoPageState extends State<EnviarCodigoPageEmp> {
 
                     if (resultado != null) {
                       _irAVerificarCodigo(_emailController.text);
-                      _mostrarMensajeOk();
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: const Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Icon(
+                              Icons.check_circle,
+                              color: Colors.white,
+                            ),
+                            SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              "Codigo enviado con exito!",
+                              style: TextStyle(
+                                color: Color.fromARGB(255, 255, 255, 255),
+                              ),
+                            ),
+                          ],
+                        ),
+                        duration: const Duration(milliseconds: 2000),
+                        width: 300,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 10),
+                        behavior: SnackBarBehavior.floating,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(3.0),
+                        ),
+                        backgroundColor:
+                            const Color.fromARGB(255, 12, 195, 106),
+                      ));
                     } else {
                       _mostrarMensajeNo();
                     }

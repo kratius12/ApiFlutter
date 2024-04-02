@@ -5,8 +5,8 @@ class ObrasService {
   ObrasService();
 
   Future<List<ObraDetalle>> getObras(int idCli) async {
-    final response = await http.get(
-        Uri.parse('https://apismovilconstru.onrender.com/obrasCli/$idCli'));
+    final response = await http.get(Uri.parse(
+        'https://apismovilconstru-production-be9a.up.railway.app/obrasCli/$idCli'));
 
     if (response.statusCode == 200) {
       Map<String, dynamic> responseData = jsonDecode(response.body);
@@ -27,13 +27,15 @@ class ObrasService {
 
   Future<String?> createObra(
       String descripcion, String fechaini, int idCli) async {
-    final response = await http
-        .post(Uri.parse('https://apismovilconstru.onrender.com/obras'), body: {
-      "descripcion": descripcion,
-      "fechaini": fechaini.toString(),
-      "idCliente": idCli.toString(),
-      "idEmp": "1"
-    });
+    final response = await http.post(
+        Uri.parse(
+            'https://apismovilconstru-production-be9a.up.railway.app/obras'),
+        body: {
+          "descripcion": descripcion,
+          "fechaini": fechaini.toString(),
+          "idCliente": idCli.toString(),
+          "idEmp": "1"
+        });
 
     if (response.statusCode == 200) {
       return "ok";

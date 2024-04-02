@@ -1,6 +1,6 @@
+import 'package:construtech/main.dart';
 import 'package:flutter/material.dart';
 import 'package:construtech/Apis/empleados/login.dart';
-import 'package:construtech/Pages/login/empleados/loginempleado.dart';
 
 // ignore: camel_case_types
 class cambiarcontraemp extends StatefulWidget {
@@ -27,7 +27,9 @@ class _cambiarcontraempState extends State<cambiarcontraemp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Cambiar contraseña"),
+        backgroundColor: Colors.grey,
+        title: const Text("Cambiar contraseña",
+            style: TextStyle(color: Colors.white)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -44,8 +46,18 @@ class _cambiarcontraempState extends State<cambiarcontraemp> {
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Por favor ingrese su contraseña nueva";
+                  } else if (value.length < 8) {
+                    return "La contraseña debe tener al menos 8 caracteres";
+                  } else if (!RegExp(r'[A-Z]').hasMatch(value)) {
+                    return "La contraseña debe tener al menos una letra mayúscula";
+                  } else if (!RegExp(r'[a-z]').hasMatch(value)) {
+                    return "La contraseña debe tener al menos una letra minúscula";
+                  } else if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]')
+                      .hasMatch(value)) {
+                    return "La contraseña debe tener al menos un carácter especial";
+                  } else {
+                    return null;
                   }
-                  return null;
                 },
               ),
               TextFormField(
@@ -56,11 +68,11 @@ class _cambiarcontraempState extends State<cambiarcontraemp> {
                 validator: (value) {
                   if (value!.isEmpty) {
                     return "Por favor confirme su contraseña nueva";
-                  }
-                  if (value != _contrasenaController.text) {
+                  } else if (value != _contrasenaController.text) {
                     return "La confirmación debe coincidir con la contraseña";
+                  } else {
+                    return null;
                   }
-                  return null;
                 },
               ),
               const SizedBox(
@@ -110,7 +122,7 @@ class _cambiarcontraempState extends State<cambiarcontraemp> {
   void _irALogin() {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => const EmpleadoLoginPage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
         (route) => false);
   }
 

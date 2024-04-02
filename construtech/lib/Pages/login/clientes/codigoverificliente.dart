@@ -20,7 +20,11 @@ class _EnviarCodigoFormState extends State<EnviarCodigoFormCliente> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Codigo de verificación"),
+        backgroundColor: Colors.grey,
+        title: const Text(
+          "Codigo de verificación",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -41,7 +45,9 @@ class _EnviarCodigoFormState extends State<EnviarCodigoFormCliente> {
                   return null;
                 },
               ),
-              const SizedBox(height: 20.0,),
+              const SizedBox(
+                height: 20.0,
+              ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
                 onPressed: () async {
@@ -49,14 +55,19 @@ class _EnviarCodigoFormState extends State<EnviarCodigoFormCliente> {
                       AuthService(); // Crear instancia de AuthService
                   String? response =
                       await authService.checkcode(_codigoController.text);
-                  String mesaje = "";
                   if (_formKey.currentState!.validate() && response != null) {
-                    mesaje = "Codigo verificado correctamente";
-                    _mostrarMensajeOK(mesaje, "Excelente!", widget.email);
+                    // ignore: use_build_context_synchronously
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => cambiarcontraCli(
+                          email: widget.email,
+                        ),
+                      ),
+                    );
+                    _mostrarMensajeOK();
                   } else {
-                    mesaje =
-                        "El codigo no pudo ser verificado, pudo haber excedido los 15 minutos o es un codigo invalido";
-                    _mostrarMensaje(mesaje, "Error");
+                    _mostrarMensaje();
                   }
                 },
                 child: const Text(
@@ -71,48 +82,65 @@ class _EnviarCodigoFormState extends State<EnviarCodigoFormCliente> {
     );
   }
 
-  void _mostrarMensaje(String mensaje, String titulo) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(titulo),
-          content: Text(mensaje),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(); // Cerrar el cuadro de diálogo
-              },
-              child: const Text('Aceptar'),
-            ),
-          ],
-        );
-      },
-    );
+  void _mostrarMensaje() {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Icon(
+            Icons.cancel,
+            color: Colors.black,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            "El codigo no pudo ser verificado, \npudo haber excedido los 15 minutos\n o es un codigo invalido",
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+          ),
+        ],
+      ),
+      duration: const Duration(milliseconds: 2000),
+      width: 300,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(3.0),
+      ),
+      backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+    ));
   }
 
-  void _mostrarMensajeOK(String mensaje, String titulo, String email) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(titulo),
-          content: Text(mensaje),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => cambiarcontraCli(
-                              email: email,
-                            )));
-              },
-              child: const Text('Aceptar'),
+  void _mostrarMensajeOK() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              "Codigo verificado con exito!",
+              style: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
             ),
           ],
-        );
-      },
+        ),
+        duration: const Duration(milliseconds: 2000),
+        width: 300,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3.0),
+        ),
+        backgroundColor: const Color.fromARGB(255, 12, 195, 106),
+      ),
     );
   }
 }

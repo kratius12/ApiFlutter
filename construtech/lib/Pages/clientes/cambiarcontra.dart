@@ -67,7 +67,8 @@ class _CambiarContraCliState extends State<CambiarContraCli> {
                     return "La contraseña debe tener al menos una letra mayúscula";
                   } else if (!RegExp(r'[a-z]').hasMatch(value)) {
                     return "La contraseña debe tener al menos una letra minúscula";
-                  } else if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(value)) {
+                  } else if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]')
+                      .hasMatch(value)) {
                     return "La contraseña debe tener al menos un carácter especial";
                   } else {
                     return null;
@@ -143,29 +144,76 @@ class _CambiarContraCliState extends State<CambiarContraCli> {
 
   void _mostrarMensajeSi() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Contraseña cambiada con éxito'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              "Contraseña actualizada con exito!",
+              style: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
+            ),
+          ],
+        ),
+        duration: const Duration(milliseconds: 2000),
+        width: 300,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3.0),
+        ),
+        backgroundColor: const Color.fromARGB(255, 12, 195, 106),
       ),
     );
 
     // Redirige al cambiarInfoScreen
-    Navigator.pushAndRemoveUntil(
+    Navigator.pop(
       context,
       MaterialPageRoute(
         builder: (context) => cambiarInfoScreen(
           idCli: widget.idCli,
         ),
       ),
-      (route) => false,
     );
   }
 
   void _mostrarMensajeNo() {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('No se pudo cambiar la contraseña'),
-        duration: Duration(seconds: 2),
+      SnackBar(
+        content: const Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              "No se pudo actualizar la contraseña!",
+              style: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
+            ),
+          ],
+        ),
+        duration: const Duration(milliseconds: 2000),
+        width: 300,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3.0),
+        ),
+        backgroundColor: const Color.fromARGB(255, 255, 0, 0),
       ),
     );
   }

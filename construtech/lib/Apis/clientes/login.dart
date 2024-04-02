@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:jwt_decode/jwt_decode.dart';
 
 class AuthService {
-  final String baseUrl = "https://apismovilconstru.onrender.com";
+  final String baseUrl = "https://apismovilconstru-production-be9a.up.railway.app";
 
   AuthService();
 
