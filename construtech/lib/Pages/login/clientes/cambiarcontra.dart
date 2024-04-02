@@ -18,7 +18,7 @@ class _cambiarcontraCliState extends State<cambiarcontraCli> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _contrasenaController = TextEditingController();
   final TextEditingController _confirmarController = TextEditingController();
-
+  bool _cambiandoContrasena = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -80,53 +80,48 @@ class _cambiarcontraCliState extends State<cambiarcontraCli> {
               ),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
-                onPressed: () async {
-                  // Muestra el indicador de carga durante la solicitud
-
-                  if (_formKey.currentState!.validate()) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return const AlertDialog(
-                          content: Row(
-                            children: [
-                              CircularProgressIndicator(),
-                              SizedBox(width: 16.0),
-                              Text("Cambiando contraseña..."),
-                            ],
-                          ),
-                        );
-                      },
-                      barrierDismissible: false,
-                    );
-                    AuthService authService = AuthService();
-                    int? response = await authService.changePass(
-                        _contrasenaController.text, widget.email);
-                    if (response == 2) {
-                      // ignore: use_build_context_synchronously
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const HomePage(),
-                        ),
-                      );
-                    }
-                    _mostrarMensajeSi(
-                        "Info", "Redireccionando a la pagina principal");
-                  }
-
-                  // ignore: use_build_context_synchronously
-                },
-                child: const Text(
-                  "Cambiar contraseña",
-                  style: TextStyle(color: Colors.white),
-                ),
+                onPressed: _cambiandoContrasena ? null : _cambiarContrasena,
+                child: _cambiandoContrasena
+                    ? CircularProgressIndicator()
+                    : const Text(
+                        "Cambiar contraseña",
+                        style: TextStyle(color: Colors.white),
+                      ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  Future<void> _cambiarContrasena() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _cambiandoContrasena = true;
+      });
+
+      AuthService authService = AuthService();
+      int? response = await authService.changePass(
+          _contrasenaController.text, widget.email);
+
+      setState(() {
+        _cambiandoContrasena = false;
+      });
+
+      if (response == 1) {
+        _mostrarMensajeSi("Info", "Contraseña cambiada correctamente!");
+        // ignore: use_build_context_synchronously
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ),
+        );
+      } else {
+        _mostrarMensajeNo();
+      }
+    }
   }
 
   void _mostrarMensajeSi(String titulo, String mensaje) {
@@ -160,5 +155,34 @@ class _cambiarcontraCliState extends State<cambiarcontraCli> {
         backgroundColor: const Color.fromARGB(255, 12, 195, 106),
       ),
     );
+  }
+
+  void _mostrarMensajeNo() {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: const Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Icon(
+            Icons.cancel,
+            color: Colors.black,
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          Text(
+            "La contraseña no pudo ser actualizada",
+            style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+          ),
+        ],
+      ),
+      duration: const Duration(milliseconds: 2000),
+      width: 300,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(3.0),
+      ),
+      backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+    ));
   }
 }
