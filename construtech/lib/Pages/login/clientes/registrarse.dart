@@ -141,14 +141,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 TextFormField(
                   controller: _nombreController,
                   decoration:
-                  const InputDecoration(labelText: 'Ingrese su nombre'),
+                      const InputDecoration(labelText: 'Ingrese su nombre'),
                   validator: _validateName,
                 ),
                 const SizedBox(height: 10),
                 TextFormField(
                   controller: _apellidosController,
                   decoration:
-                  const InputDecoration(labelText: 'Ingrese sus apellidos'),
+                      const InputDecoration(labelText: 'Ingrese sus apellidos'),
                   validator: _validateLastName,
                 ),
                 const SizedBox(height: 10),
@@ -158,7 +158,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   validator: _validatePhoneNumber,
                 ),
                 DropdownButtonFormField<String>(
-                  value: _tipoDocController.text.isEmpty ? null : _tipoDocController.text,
+                  value: _tipoDocController.text.isEmpty
+                      ? null
+                      : _tipoDocController.text,
                   onChanged: (newValue) {
                     setState(() {
                       _tipoDocController.text = newValue!;
@@ -193,20 +195,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 ),
                 TextFormField(
                   decoration:
-                  const InputDecoration(labelText: "Fecha de nacimiento"),
+                      const InputDecoration(labelText: "Fecha de nacimiento"),
                   controller: _fechaNacController,
                   onTap: () async {
                     DateTime currentDate = DateTime.now();
                     DateTime initialDate = currentDate.subtract(const Duration(
                         days:
-                        18 * 365)); // Restar 18 años desde la fecha actual
+                            18 * 365)); // Restar 18 años desde la fecha actual
 
                     DateTime? pickedDate = await showDatePicker(
                       context: context,
                       initialDate: initialDate,
                       firstDate: DateTime(1900),
                       lastDate:
-                      initialDate, // Configurar lastDate como la fecha inicial
+                          initialDate, // Configurar lastDate como la fecha inicial
                     );
 
                     if (pickedDate != null) {
@@ -248,12 +250,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      bool emailExists = await _checkEmailExists(_emailController.text);
-                      bool docExists = await _checkDocExists(_cedulaController.text, _tipoDocController.text);
+                      bool emailExists =
+                          await _checkEmailExists(_emailController.text);
+                      bool docExists = await _checkDocExists(
+                          _cedulaController.text, _tipoDocController.text);
                       if (emailExists) {
-                        _mostrarMensajeNo("El email ingresado ya está asociado a otro usuario");
+                        _mostrarMensajeNo(
+                            "El email ingresado ya está asociado\na otro usuario");
                       } else if (docExists) {
-                        _mostrarMensajeNo("El número y tipo de documento ya están asociados a otro usuario");
+                        _mostrarMensajeNo(
+                            "El número y tipo de documento ya están asociados a otro usuario");
                       } else {
                         AuthService authService = AuthService();
                         String? response = await authService.register(
@@ -289,7 +295,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   Future<bool> _checkEmailExists(String email) async {
-    final response = await http.get(Uri.parse('http://apismovilconstru-production-be9a.up.railway.app/clientes'));
+    final response = await http.get(Uri.parse(
+        'http://apismovilconstru-production-be9a.up.railway.app/clientes'));
     if (response.statusCode == 200) {
       List<dynamic> clientes = json.decode(response.body);
       return clientes.any((cliente) => cliente['email'] == email);
@@ -299,10 +306,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   Future<bool> _checkDocExists(String cedula, String tipoDoc) async {
-    final response = await http.get(Uri.parse('http://apismovilconstru-production-be9a.up.railway.app/clientes'));
+    final response = await http.get(Uri.parse(
+        'http://apismovilconstru-production-be9a.up.railway.app/clientes'));
     if (response.statusCode == 200) {
       List<dynamic> clientes = json.decode(response.body);
-      return clientes.any((cliente) => cliente['tipoDoc'] == tipoDoc && cliente['cedula'] == cedula);
+      return clientes.any((cliente) =>
+          cliente['tipoDoc'] == tipoDoc && cliente['cedula'] == cedula);
     } else {
       return false;
     }
@@ -319,46 +328,69 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   void _mostrarMensajeSi(String mensaje) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Info'),
-          content: Text(mensaje),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const HomePage()),
-                      (Route<dynamic> route) => false,
-                );
-              },
-              child: const Text('Aceptar'),
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            const Icon(
+              Icons.check_circle,
+              color: Colors.white,
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            Text(
+              mensaje,
+              style: const TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
             ),
           ],
-        );
-      },
+        ),
+        duration: const Duration(milliseconds: 2000),
+        width: 300,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(3.0),
+        ),
+        backgroundColor: const Color.fromARGB(255, 12, 195, 106),
+      ),
+    );
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePage()),
+      (Route<dynamic> route) => false,
     );
   }
 
   void _mostrarMensajeNo(String mensaje) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: Text(mensaje),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Aceptar'),
-            ),
-          ],
-        );
-      },
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          const Icon(
+            Icons.cancel,
+            color: Colors.black,
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          Text(
+            mensaje,
+            style: const TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+          ),
+        ],
+      ),
+      duration: const Duration(milliseconds: 2000),
+      width: 300,
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(3.0),
+      ),
+      backgroundColor: const Color.fromARGB(255, 255, 0, 0),
+    ));
   }
 }
